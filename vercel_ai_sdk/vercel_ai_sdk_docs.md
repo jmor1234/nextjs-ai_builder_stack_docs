@@ -50,6 +50,116 @@ console.log(text)
 // Output:
 // Love is a complex and multifaceted emotion that can be felt and expressed in many different ways. It involves deep affection, care, compassion, and connection towards another person or thing. Love can take on various forms such as romantic love, platonic love, familial love, or self-love.
 
+# Anthropic Provider
+
+The Anthropic provider contains language model support for the Anthropic Messages API.
+
+## Setup
+
+The Anthropic provider is available in the `@ai-sdk/anthropic` module. You can install it with:
+
+```
+pnpm
+npm
+yarn
+npm install @ai-sdk/anthropic
+```
+
+## Provider Instance
+
+You can import the default provider instance `anthropic` from `@ai-sdk/anthropic`:
+
+```javascript
+import { anthropic } from '@ai-sdk/anthropic';
+```
+
+If you need a customized setup, you can import `createAnthropic` from `@ai-sdk/anthropic` and create a provider instance with your settings:
+
+```javascript
+import { createAnthropic } from '@ai-sdk/anthropic';
+
+const anthropic = createAnthropic({
+  // custom settings
+});
+```
+
+You can use the following optional settings to customize the Anthropic provider instance:
+
+- `baseURL` *(string)*: Use a different URL prefix for API calls, e.g. to use proxy servers. The default prefix is `https://api.anthropic.com/v1`.
+- `apiKey` *(string)*: API key that is being sent using the `x-api-key` header. It defaults to the `ANTHROPIC_API_KEY` environment variable.
+- `headers` *(Record<string,string>)*: Custom headers to include in the requests.
+- `fetch` *(input: RequestInfo, init?: RequestInit) => Promise<Response>*: Custom fetch implementation. Defaults to the global `fetch` function. You can use it as a middleware to intercept requests, or to provide a custom fetch implementation for e.g. testing.
+
+## Language Models
+
+You can create models that call the Anthropic Messages API using the provider instance. The first argument is the model ID, e.g. `claude-3-haiku-20240307`. Some models have multi-modal capabilities.
+
+```javascript
+const model = anthropic('claude-3-haiku-20240307');
+```
+
+The following optional settings are available for Anthropic models:
+
+- `cacheControl` *(boolean)*: Enable the Anthropic cache control beta.
+
+You can then use provider metadata to set cache control breakpoints (example).
+
+### Example: Generate Text
+
+You can use Anthropic language models to generate text with the `generateText` function:
+
+```javascript
+import { anthropic } from '@ai-sdk/anthropic';
+import { generateText } from 'ai';
+
+const { text } = await generateText({
+  model: anthropic('claude-3-haiku-20240307'),
+  prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+});
+```
+
+Anthropic language models can also be used in the `streamText`, `generateObject`, `streamObject`, and `streamUI` functions (see AI SDK Core and AI SDK RSC).
+
+### Example: Cache Control
+
+You can enable the cache control beta by setting the `cacheControl` option to `true` when creating the model instance.
+
+In the messages and message parts, you can then use the `experimental_providerMetadata` property to set cache control breakpoints. You need to set the `anthropic` property in the `experimental_providerMetadata` object to `{ cacheControl: { type: 'ephemeral' } }` to set a cache control breakpoint.
+
+The cache creation input tokens are then returned in the `experimental_providerMetadata` object for `generateText` and `generateObject`, again under the `anthropic` property. When you use `streamText` or `streamObject`, the response contains a promise that resolves to the metadata. Alternatively, you can receive it in the `onFinish` callback.
+
+```javascript
+import { anthropic } from '@ai-sdk/anthropic';
+import { generateText } from 'ai';
+
+const errorMessage = '... long error message ...';
+
+const result = await generateText({
+  model: anthropic('claude-3-5-sonnet-20240620', {
+    cacheControl: true,
+  }),
+  messages: [
+    {
+      role: 'user',
+      content: [
+        { type: 'text', text: 'You are a JavaScript expert.' },
+        {
+          type: 'text',
+          text: `Error message: ${errorMessage}`,
+          experimental_providerMetadata: {
+            anthropic: { cacheControl: { type: 'ephemeral' } },
+          },
+        },
+        { type: 'text', text: 'Explain the error message.' },
+      ],
+    },
+  ],
+});
+
+console.log(result.text);
+console.log(result.experimental_providerMetadata?.anthropic);
+// e.g. { cacheCreationInputTokens: 2118, cacheReadInputTokens: 0 }
+
 # Prompts
 
 Prompts are instructions that you give a large language model (LLM) to tell it what to do. It's like when you ask someone for directions; the clearer your question, the better the directions you'll get.
