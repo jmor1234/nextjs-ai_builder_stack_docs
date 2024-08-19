@@ -539,7 +539,7 @@ This module contains:
 - `preloadQuery`, for preloading data for reactive client components.
 - `fetchQuery`, `fetchMutation`, and `fetchAction` for loading and mutating Convex data from Next.js Server Components, Server Actions, and Route Handlers.
 
-## Usage
+### Usage
 All exported functions assume that a Convex deployment URL is set in the `NEXT_PUBLIC_CONVEX_URL` environment variable. `npx convex dev` will automatically set it during local development.
 
 ### Preloading data
@@ -570,7 +570,7 @@ export function ClientComponent(props: {
 }
 ```
 
-## Type Aliases
+### Type Aliases
 
 ### `NextjsOptions`
 Options to `preloadQuery`, `fetchQuery`, `fetchMutation`, and `fetchAction`.
@@ -581,7 +581,7 @@ Options to `preloadQuery`, `fetchQuery`, `fetchMutation`, and `fetchAction`.
 | `url?` | `string` | The URL of the Convex deployment to use for the function call. Defaults to `process.env.NEXT_PUBLIC_CONVEX_URL`. |
 | `skipConvexDeploymentUrlCheck?` | `boolean` | Skip validating that the Convex deployment URL looks like `https://happy-animal-123.convex.cloud` or `localhost`. This can be useful if running a self-hosted Convex backend that uses a different URL. The default value is `false`. |
 
-## Functions
+### Functions
 
 ### `preloadQuery`
 `▸ preloadQuery<Query>(query, ...args): Promise<Preloaded<Query>>`
@@ -663,7 +663,7 @@ Next.js automatically renders both Client and Server Components on the server du
 
 By default, Client Components will not wait for Convex data to be loaded, and your UI will render in a "loading" state. Read on to learn how to preload data during server rendering and how to interact with the Convex deployment from Next.js server-side.
 
-### Example: Next.js App Router
+## Example: Next.js App Router
 
 This page covers the App Router variant of Next.js.
 
@@ -841,7 +841,7 @@ There are three types of functions:
 
 You can also build HTTP actions when you want to call your functions from a webhook or a custom client.
 
-# Queries
+## Queries
 
 Queries are the bread and butter of your backend API. They fetch data from the database, check authentication or perform other business logic, and return data back to the client application.
 
@@ -867,7 +867,7 @@ export const getTaskList = query({
 
 Read on to understand how to build queries yourself.
 
-## Query names
+### Query names
 
 Queries are defined in TypeScript files inside your `convex/` directory.
 
@@ -903,7 +903,7 @@ Client libraries in languages other than JavaScript and TypeScript use strings i
 - `api.foo.myQueries.myQuery` is `"foo/myQueries:myQuery"`
 - `api.myFunction.default` is `"myFunction:default"` or `"myFunction"`
 
-## The query constructor
+### The query constructor
 
 To actually declare a query in Convex you use the `query` constructor function. Pass it an object with a `handler` function, which returns the query result:
 
@@ -917,7 +917,7 @@ export const myConstantString = query({
 });
 ```
 
-## Query arguments
+### Query arguments
 
 Queries accept named arguments. The argument values are accessible as fields of the second parameter of the `handler` function:
 
@@ -951,13 +951,13 @@ See [argument validation](https://docs.convex.dev/docs/reference/values#argument
 
 The first parameter of the `handler` function contains the query context.
 
-## Query responses
+### Query responses
 
 Queries can return values of any supported Convex type which will be automatically serialized and deserialized.
 
 Queries can also return `undefined`, which is not a valid Convex value. When a query returns `undefined` it is translated to `null` on the client.
 
-## Query context
+### Query context
 
 The `query` constructor enables fetching data, and other Convex features by passing a `QueryCtx` object to the `handler` function as the first parameter:
 
@@ -995,7 +995,7 @@ To return URLs to stored files use the `storage` field. Read more about [File St
 
 To check user authentication use the `auth` field. Read more about [Authentication](https://docs.convex.dev/docs/reference/auth).
 
-## Splitting up query code via helpers
+### Splitting up query code via helpers
 
 When you want to split up the code in your query or reuse logic across multiple Convex functions you can define and call helper TypeScript functions:
 
@@ -1027,7 +1027,7 @@ You can export helpers to use them across multiple files. They will not be calla
 
 See [Type annotating server side helpers](https://docs.convex.dev/docs/reference/typescript#type-annotating-server-side-helpers) for more guidance on TypeScript types.
 
-## Using NPM packages
+### Using NPM packages
 
 Queries can import NPM packages installed in `node_modules`. Not all NPM packages are supported, see [Runtimes](https://docs.convex.dev/docs/reference/runtimes) for more details.
 
@@ -1044,7 +1044,7 @@ export const randomName = query({
 });
 ```
 
-## Calling queries from clients
+### Calling queries from clients
 
 To call a query from React use the `useQuery` hook along with the generated `api` object.
 
@@ -1060,7 +1060,7 @@ export function MyApp() {
 
 See the [React client documentation](https://docs.convex.dev/docs/reference/react) for all the ways queries can be called.
 
-## Caching & reactivity
+### Caching & reactivity
 
 Queries have two awesome attributes:
 
@@ -1073,7 +1073,7 @@ For this reason queries cannot fetch from third party APIs. To call third party 
 
 You might wonder whether you can use non-deterministic language functionality like `Math.random()` or `Date.now()`. The short answer is that Convex takes care of implementing these in a way that you don't have to think about the deterministic constraint.
 
-# Mutations
+## Mutations
 
 Mutations insert, update and remove data from the database, check authentication or perform other business logic, and optionally return a response to the client application.
 
@@ -1093,13 +1093,13 @@ export const createTask = mutation({
 });
 ```
 
-## Mutation names
+### Mutation names
 
 Mutations follow the same naming rules as queries, see [Query names](https://docs.convex.dev/docs/queries#query-names).
 
 Queries and mutations can be defined in the same file when using named exports.
 
-## The mutation constructor
+### The mutation constructor
 
 To declare a mutation in Convex use the `mutation` constructor function. Pass it an object with a `handler` function, which performs the mutation:
 
@@ -1115,7 +1115,7 @@ export const mutateSomething = mutation({
 
 Unlike a query, a mutation can but does not have to return a value.
 
-## Mutation arguments
+### Mutation arguments
 
 Just like queries, mutations accept named arguments, and the argument values are accessible as fields of the second parameter of the `handler` function:
 
@@ -1152,13 +1152,13 @@ See [argument validation](https://docs.convex.dev/docs/queries#argument-validati
 
 The first parameter to the `handler` function is reserved for the mutation context.
 
-## Mutation responses
+### Mutation responses
 
 Queries can return values of any supported Convex type which will be automatically serialized and deserialized.
 
 Mutations can also return `undefined`, which is not a valid Convex value. When a mutation returns `undefined` it is translated to `null` on the client.
 
-## Mutation context
+### Mutation context
 
 The mutation constructor enables writing data to the database, and other Convex features by passing a `MutationCtx` object to the `handler` function as the first parameter:
 
@@ -1196,7 +1196,7 @@ Read on about [Writing Data](https://docs.convex.dev/docs/database#writing-data)
 - To check user authentication use the `auth` field. Read on about [Authentication](https://docs.convex.dev/docs/authentication).
 - To schedule functions to run in the future, use the `scheduler` field. Read on about [Scheduled Functions](https://docs.convex.dev/docs/scheduled-functions).
 
-## Splitting up mutation code via helpers
+### Splitting up mutation code via helpers
 
 When you want to split up the code in your mutation or reuse logic across multiple Convex functions you can define and call helper TypeScript functions:
 
@@ -1223,7 +1223,7 @@ You can export helpers to use them across multiple files. They will not be calla
 
 See [Type annotating server side helpers](https://docs.convex.dev/docs/queries#type-annotating-server-side-helpers) for more guidance on TypeScript types.
 
-## Using NPM packages
+### Using NPM packages
 
 Mutations can import NPM packages installed in `node_modules`. Not all NPM packages are supported, see [Runtimes](https://docs.convex.dev/docs/runtimes) for more details.
 
@@ -1240,7 +1240,7 @@ export const randomName = mutation({
 });
 ```
 
-## Calling mutations from clients
+### Calling mutations from clients
 
 To call a mutation from React use the `useMutation` hook along with the generated `api` object.
 
@@ -1262,7 +1262,7 @@ See the [React client documentation](https://docs.convex.dev/docs/react-client) 
 
 When mutations are called from the React or Rust clients, they are executed one at a time in a single, ordered queue. You don't have to worry about mutations editing the database in a different order than they were triggered.
 
-## Transactions
+### Transactions
 
 Mutations run transactionally. This means that:
 
@@ -1271,11 +1271,9 @@ Mutations run transactionally. This means that:
 
 For this to work, similarly to queries, mutations must be deterministic, and cannot call third party APIs. To call third party APIs, use actions.
 
-# Actions
+## Actions
 
 Actions can call third-party services to do things such as processing a payment with Stripe. They can be run in Convex's JavaScript environment or in Node.js. They can interact with the database indirectly by calling queries and mutations.
-
-## Example: GIPHY Action
 
 ### Action names
 
@@ -1401,11 +1399,11 @@ To schedule functions to run in the future, use the `scheduler` field. Read on a
 
 To search a vector index, use the `vectorSearch` field. Read on about [Vector Search](https://docs.convex.dev/docs/reference/vector-search).
 
-## Dealing with circular type inference
+### Dealing with circular type inference
 
 Working around the TypeScript error: some action implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
 
-## Calling third-party APIs and using NPM packages
+### Calling third-party APIs and using NPM packages
 
 Actions can run in Convex's custom JavaScript environment or in Node.js.
 
@@ -1445,13 +1443,13 @@ export const doSomething = action({
 
 Learn more about the [two Convex Runtimes](https://docs.convex.dev/docs/reference/runtimes).
 
-## Splitting up action code via helpers
+### Splitting up action code via helpers
 
 Just like with queries and mutations you can define and call helper functions to split up the code in your actions or reuse logic across multiple Convex functions.
 
 But note that the `ActionCtx` only has the `auth` field in common with `QueryCtx` and `MutationCtx`.
 
-## Calling actions from clients
+### Calling actions from clients
 
 To call an action from React use the `useAction` hook along with the generated `api` object.
 
@@ -1502,7 +1500,7 @@ export const actionThatCallsAPI = internalAction({
 
 This way the mutation can enforce invariants, such as preventing the user from executing the same action twice.
 
-## Limits
+### Limits
 
 - Actions time out after 10 minutes.
 - Node.js and Convex runtime have 512MB and 64MB memory limit respectively. Please contact us if you have a use case that requires configuring higher limits.
@@ -1510,11 +1508,11 @@ This way the mutation can enforce invariants, such as preventing the user from e
 
 For information on other limits, see [here](https://docs.convex.dev/docs/reference/limits).
 
-## Error handling
+### Error handling
 
 Unlike queries and mutations, actions may have side-effects and therefore can't be automatically retried by Convex when errors occur. For example, say your action calls Stripe to send a customer invoice. If the HTTP request fails, Convex has no way of knowing if the invoice was already sent. Like in normal backend code, it is the responsibility of the caller to handle errors raised by actions and retry the action call if appropriate.
 
-## Dangling promises
+### Dangling promises
 
 Make sure to `await` all promises created within an action. Async tasks still running when the function returns might or might not complete. In addition, since the Node.js execution environment might be reused between action calls, dangling promises might result in errors in subsequent action invocations.
 
@@ -1526,9 +1524,9 @@ HTTP actions take in a `Request` and return a `Response` following the Fetch API
 
 HTTP actions are exposed at `https://<your deployment name>.convex.site` (e.g. `https://happy-animal-123.convex.site`).
 
-## Example: HTTP Actions
+### Example: HTTP Actions
 
-### Defining HTTP Actions
+#### Defining HTTP Actions
 
 HTTP action handlers are defined using the `httpAction` constructor, similar to the `action` constructor for normal actions:
 
@@ -1611,7 +1609,7 @@ curl -d '{ "author": "User 123", "body": "Hello world" }' \
 
 Like other Convex functions, you can view your HTTP actions in the Functions view of your dashboard and view logs produced by them in the Logs view.
 
-## Limits
+### Limits
 
 HTTP actions run in the same environment as queries and mutations, so also do not have access to Node.js-specific JavaScript APIs. HTTP actions can call actions, which can run in Node.js.
 
@@ -1623,15 +1621,15 @@ HTTP actions support request and response body types of `.text()`, `.json()`, `.
 
 Note that you don't need to define an HTTP action to call your queries, mutations, and actions over HTTP if you control the caller, since you can use the JavaScript `ConvexHttpClient` or the Python client to call these functions directly.
 
-## Debugging
+### Debugging
 
-### Step 1: Check that your HTTP actions were deployed.
+#### Step 1: Check that your HTTP actions were deployed.
 
 Check the functions page in the dashboard and make sure there's an entry called `http`.
 
 If not, double-check that you've defined your HTTP actions with the `httpRouter` in a file called `http.js` or `http.ts` (the name of the file must match exactly), and that `npx convex dev` has no errors.
 
-### Step 2: Check that you can access your endpoint using `curl`
+#### Step 2: Check that you can access your endpoint using `curl`
 
 Get your URL from the dashboard under Settings > URL and Deploy Key.
 
@@ -1645,7 +1643,7 @@ curl -X GET https://<deployment name>.convex.site/myEndpoint
 
 Check the logs page in the dashboard to confirm that there's an entry for your HTTP action.
 
-### Step 3: Check the request being made by your browser
+#### Step 3: Check the request being made by your browser
 
 If you've determined that your HTTP actions have been deployed and are accessible via `curl`, but there are still issues requesting them from your app, check the exact requests being made by your browser.
 
@@ -1657,13 +1655,13 @@ You should be able to see these requests in the dashboard logs page.
 
 If you see "CORS error" or messages in the browser console like `Access to fetch at '...' from origin '...' has been blocked by CORS policy`, you likely need to configure CORS headers and potentially add a handler for the pre-flight `OPTIONS` request. See the "CORS" section below.
 
-## Common Patterns
+### Common Patterns
 
-### File Storage
+#### File Storage
 
 HTTP actions can be used to handle uploading and fetching stored files, see [File Storage with HTTP actions](https://docs.convex.dev/file-storage).
 
-### CORS
+#### CORS
 
 To make requests to HTTP actions from a website, you need to add Cross-Origin Resource Sharing (CORS) headers to your HTTP actions.
 
@@ -1732,7 +1730,7 @@ http.route({
 });
 ```
 
-### Authentication
+#### Authentication
 
 You can leverage Convex's built-in authentication integration and access a user identity from `ctx.auth.getUserIdentity()`. To do this, call your endpoint with an `Authorization` header including a JWT token:
 
@@ -1755,7 +1753,7 @@ By default, your Convex functions are public and accessible to clients. Public f
 
 While internal functions help mitigate risk by reducing the public surface area of your application, you can still validate internal invariants using argument validation and/or authentication.
 
-## Use Cases for Internal Functions
+### Use Cases for Internal Functions
 
 Leverage internal functions by:
 
@@ -1766,7 +1764,7 @@ Leverage internal functions by:
 5. Running them using the Dashboard
 6. Running them from the CLI
 
-## Defining Internal Functions
+### Defining Internal Functions
 
 An internal function is defined using `internalQuery`, `internalMutation`, or `internalAction`. For example:
 
@@ -1799,7 +1797,7 @@ export const markPlanAsProfessional = internalAction({
 });
 ```
 
-## Calling Internal Functions
+### Calling Internal Functions
 
 Internal functions can be called from actions and scheduled from actions and mutation using the `internal` object.
 
@@ -1832,15 +1830,15 @@ In this example, a user should not be able to directly call `internal.plans.mark
 
 You can define public and internal functions in the same file.
 
-# Argument and Return Value Validation
+## Argument and Return Value Validation
 
 Argument and return value validators ensure that queries, mutations, and actions are called with the correct types of arguments and return the expected types of return values.
 
 This is important for security! Without argument validation, a malicious user can call your public functions with unexpected arguments and cause surprising results. TypeScript alone won't help because TypeScript types aren't present at runtime. We recommend adding argument validation for all public functions in production apps. For non-public functions that are not called by clients, we recommend internal functions and optionally validation.
 
-## Example: Argument Validation
+### Example: Argument Validation
 
-### Adding validators
+#### Adding validators
 
 To add argument validation to your functions, pass an object with `args` and `handler` properties to the `query`, `mutation` or `action` constructor. To add return value validation, use the `returns` property in this object:
 
@@ -1870,7 +1868,7 @@ If the client supplies arguments not declared in `args`, or if the function retu
 
 Even `args: {}` is a helpful use of validators because TypeScript will show an error on the client if you try to pass any arguments to the function which doesn't expect them.
 
-## Supported types
+### Supported types
 
 All functions, both public and internal, can accept and return the following data types. Each type has a corresponding validator that can be accessed on the `v` object imported from `"convex/values"`.
 
@@ -1878,7 +1876,7 @@ The database can store the exact same set of data types.
 
 Additionally, you can also express type unions, literals, any types, and optional fields.
 
-### Convex values
+#### Convex values
 
 Convex supports the following types of values:
 
@@ -2000,7 +1998,7 @@ export default mutation({
 });
 ```
 
-# Error Handling
+## Error Handling
 
 There are four reasons why your Convex queries and mutations may hit errors:
 
@@ -2019,7 +2017,7 @@ On the other hand, you must decide how to handle application, developer and read
 
 Additionally, you might also want to send client-side errors to a service like Sentry to capture additional information for debugging and observability.
 
-## Errors in queries
+### Errors in queries
 
 If your query function hits an error, the error will be sent to the client and thrown from your `useQuery` call site. The best way to handle these errors is with a React error boundary component.
 
@@ -2041,11 +2039,11 @@ Then any error in any of your components will be caught by the boundary and rend
 
 On the other hand, if you'd like to enable some portions of your app to continue functioning even if other parts hit errors, you can instead wrap different parts of your app in separate error boundaries.
 
-## Retrying
+### Retrying
 
 Unlike other frameworks, there is no concept of "retrying" if your query function hits an error. Because Convex functions are deterministic, if the query function hits an error, retrying will always produce the same error. There is no point in running the query function with the same arguments again.
 
-## Errors in mutations
+### Errors in mutations
 
 If a mutation hits an error, this will:
 
@@ -2074,15 +2072,15 @@ try {
 }
 ```
 
-## Reporting caught errors
+### Reporting caught errors
 
 If you handle your mutation error, it will no longer become an unhandled promise rejection. You may need to report this error to your exception handling service manually.
 
-## Errors in action functions
+### Errors in action functions
 
 Unlike queries and mutations, actions may have side-effects and therefore can't be automatically retried by Convex when errors occur. For example, say your action sends a email. If it fails part-way through, Convex has no way of knowing if the email was already sent and can't safely retry the action. It is responsibility of the caller to handle errors raised by actions and retry if appropriate.
 
-## Differences in error reporting between dev and prod
+### Differences in error reporting between dev and prod
 
 Using a dev deployment any server error thrown on the client will include the original error message and a server-side stack trace to ease debugging.
 
@@ -2090,13 +2088,13 @@ Using a production deployment any server error will be redacted to only include 
 
 Both development and production deployments log full errors with stack traces which can be found on the Logs page of a given deployment.
 
-## Application errors, expected failures
+### Application errors, expected failures
 
 If you have expected ways your functions might fail, you can either return different values or throw `ConvexErrors`.
 
 See [Application Errors](https://docs.convex.dev/reference/errors#application-errors).
 
-## Read/write limit errors
+### Read/write limit errors
 
 To ensure uptime and guarantee performance, Convex will catch queries and mutations that try to read or write too much data. These limits are enforced at the level of a single query or mutation function execution. The limits are:
 
@@ -2118,11 +2116,11 @@ Number of calls to `db.get` and `db.query` has a limit to prevent a single query
 
 In general, if you're running into these limits frequently, we recommend indexing your queries to reduce the number of documents scanned, allowing you to avoid unnecessary reads. Queries that scan large swaths of your data may look innocent at first, but can easily blow up at any production scale. If your functions are close to hitting these limits they will log a warning.
 
-# Application Errors
+### Application Errors
 
 If you have expected ways your functions might fail, you can either return different values or throw `ConvexErrors`.
 
-## Returning different values
+#### Returning different values
 
 If you're using TypeScript, different return types can enforce that you're handling error scenarios.
 
@@ -2134,7 +2132,7 @@ Id<"users"> | { error: "EMAIL_ADDRESS_IN_USE" };
 
 to express that either the mutation succeeded or the email address was already taken. This ensures that you remember to handle these cases in your UI.
 
-## Throwing application errors
+#### Throwing application errors
 
 You might prefer to throw errors for the following reasons:
 
@@ -2163,7 +2161,7 @@ export const assignRole = mutation({
 });
 ```
 
-### Application error data payload
+#### Application error data payload
 
 You can pass the same data types supported by function arguments, return types, and the database, to the `ConvexError` constructor. This data will be stored on the `data` property of the error:
 
@@ -2187,7 +2185,7 @@ throw new ConvexError({
 
 Error payloads more complicated than a simple string are helpful for more structured error logging, or for handling sets of errors differently on the client.
 
-### Handling application errors on the client
+#### Handling application errors on the client
 
 On the client, application errors also use the `ConvexError` class, and the data they carry can be accessed via the `data` property:
 
@@ -2220,14 +2218,14 @@ export function MyApp() {
 }
 ```
 
-# Runtimes
+## Runtimes
 
 Convex functions can run in two runtimes:
 
 1. Default Convex runtime
 2. Opt-in Node.js runtime
 
-## Default Convex runtime
+### Default Convex runtime
 
 All Convex backend functions are written in JavaScript or TypeScript. By default, all functions run in a custom JavaScript runtime very similar to the Cloudflare Workers runtime with access to most web standard globals.
 
@@ -2277,7 +2275,7 @@ export const updateSomething = mutation({
 });
 ```
 
-## Actions
+### Actions
 
 Actions are unrestricted by the same rules of determinism as query and mutation functions. Notably, actions are allowed to call third-party HTTP endpoints via the browser-standard `fetch` function.
 
@@ -2291,19 +2289,19 @@ Use of the Node.js environment is restricted to action functions only. If you wa
 
 Every `.ts` and `.js` file in the `convex` directory is bundled either for the default Convex JavaScript runtime or Node.js, even if it contains no Convex functions. So a `convex/utils.ts` file that used Node.js-specific libraries would also need to have "use node" at the top to avoid warnings at bundle time.
 
-# Bundling
+## Bundling
 
 Bundling is the process of gathering, optimizing, and transpiling the JS/TS source code of functions and their dependencies. During development and when deploying, the code is transformed to a format that Convex runtimes can directly and efficiently execute.
 
 Convex currently bundles all dependencies automatically, but for the Node.js runtime you can disable bundling certain packages via the *external packages* config.
 
-## Bundling for Convex
+### Bundling for Convex
 
 When you push code either via `npx convex dev` or `npx convex deploy`, the Convex CLI uses esbuild to traverse your `convex/` folder and bundle your functions and all of their used dependencies into a source code bundle. This bundle is then sent to the server.
 
 Thanks to bundling you can write your code using both modern ECMAScript Modules (ESM) or the older CommonJS (CJS) syntax.
 
-### ESM vs. CJS
+#### ESM vs. CJS
 
 **ESM**:
 - Is the standard for browser JavaScript
@@ -2315,11 +2313,11 @@ Thanks to bundling you can write your code using both modern ECMAScript Modules 
 - Relies on dynamic imports via the `require` and asynchronous `import` functions for fetching external modules
 - Uses the `module.exports` object for exports
 
-## Bundling Limitations
+### Bundling Limitations
 
 The nature of bundling comes with a few limitations.
 
-### Code Size Limits
+#### Code Size Limits
 
 The total size of your bundled function code in your `convex/` folder is limited to 32MiB (~33.55MB). Other platform limits can be found [here](https://docs.convex.dev/limits).
 
@@ -2354,13 +2352,13 @@ Additionally, some libraries rely on local files, which cannot be bundled by esb
 - `pdf-parse` relying on being dynamically imported with `require()` in order to detect if it is being run in test mode
 - `tiktoken` relying on local WASM files
 
-## External Packages
+### External Packages
 
 As a workaround for the bundling limitations above, Convex provides an escape hatch: *external packages*. This feature is currently exclusive to Convex's Node.js runtime.
 
 External packages use esbuild's facility for marking a dependency as external. This tells esbuild to not bundle the external dependency at all and to leave the import as a dynamic runtime import using `require()` or `import()`. Thus, your Convex modules will rely on the underlying system having that dependency made available at execution-time.
 
-### External Packages are in Beta
+#### External Packages are in Beta
 
 External Packages are currently a beta feature. If you have feedback or feature requests, let us know on [Discord](https://discord.gg/convex)!
 
@@ -2417,7 +2415,7 @@ import SomeModule from "some-module";
 const { Foo } = SomeModule;
 ```
 
-### Limitations
+#### Limitations
 
 The total size of your source code bundle and external packages cannot exceed the following:
 
@@ -2431,11 +2429,11 @@ Packages that are known not to work at this time:
 
 If there is a package that you would like working in your Convex functions, let us know.
 
-# Debugging
+## Debugging
 
 Debugging is the process of figuring out why your code isn't behaving as you expect.
 
-## Debugging during development
+### Debugging during development
 
 During development the built-in console API allows you to understand what's going on inside your functions:
 
@@ -2475,11 +2473,11 @@ You can view these logs:
 2. In your Convex dashboard on the Logs page.
 3. In your terminal by running `npx convex logs` or `npx convex dev --tail-logs`.
 
-## Using a debugger
+### Using a debugger
 
 You can exercise your functions from tests, in which case you can add `debugger;` statements and step through your code. See [Testing](https://docs.convex.dev/testing).
 
-## Debugging in production
+### Debugging in production
 
 When debugging an issue in production your options are:
 
@@ -2517,8 +2515,6 @@ As your app grows more complex, you'll need more from your database:
 - Exposing large datasets with Paginated Queries
 - Type safety by Defining a Schema
 - Interoperability with data Import & Export
-  
-# Tables & Documents
 
 ## Tables
 
@@ -2546,11 +2542,11 @@ These are all valid Convex documents:
 
 They can also contain references to other documents in other tables. See [Data Types](link_to_data_types) to learn more about the types supported in Convex and [Document IDs](link_to_document_ids) to learn about how to use those types to model your data.
 
-# Reading Data
+## Reading Data
 
 Query and mutation functions can read data from database tables using document ids and document queries.
 
-## Reading a Single Document
+### Reading a Single Document
 
 Given a single document's id you can read its data with the `db.get` method:
 
@@ -2569,7 +2565,7 @@ export const getTask = query({
 
 *Note: You should use the `v.id` validator like in the example above to make sure you are not exposing data from tables other than the ones you intended.*
 
-## Querying Documents
+### Querying Documents
 
 Document queries always begin by choosing the table to query with the `db.query` method:
 
@@ -2727,7 +2723,7 @@ const messages = await ctx.db
 
 See [Limit expressions with indexes](https://docs.convex.dev/docs/reference/query-api#limit-expressions-with-indexes) for details.
 
-### Ordering of Different Types of Values
+#### Ordering of Different Types of Values
 
 A single field can have values of any Convex type. When there are values of different types in an indexed field, their ascending order is as follows:
 
@@ -2774,7 +2770,7 @@ const counterOrNull = await ctx.db.query("counter").unique();
 
 See [Paginated Queries](https://docs.convex.dev/docs/reference/query-api#paginated-queries) to learn more.
 
-## More Complex Queries
+### More Complex Queries
 
 Convex prefers to have a few, simple ways to walk through and select documents from tables. In Convex, there is no specific query language for complex logic like a join, an aggregation, or a group by.
 
@@ -2844,7 +2840,7 @@ export const numPurchasesPerBuyer = query({
 });
 ```
 
-## Querying Performance and Limits
+### Querying Performance and Limits
 
 Most of the example document queries above can lead to a full table scan. That is, for the document query to return the requested results, it might need to walk over every single document in the table.
 
@@ -2869,11 +2865,11 @@ might need to walk over every single document in the "tasks" table just to find 
 
 If a table has more than a few thousand documents, you should use indexes to improve your document query performance. Otherwise, you may run into our enforced limits, detailed [here](https://docs.convex.dev/docs/reference/query-api#query-performance-and-limits).
 
-# Writing Data
+## Writing Data
 
 Mutations can insert, update, and remove data from database tables.
 
-## Inserting new documents
+### Inserting new documents
 
 You can create new documents in the database with the `db.insert` method:
 
@@ -2896,7 +2892,7 @@ The same types of values that can be passed into and returned from queries and m
 
 The `insert` method returns a globally unique ID for the newly inserted document.
 
-## Updating existing documents
+### Updating existing documents
 
 Given an existing document ID, the document can be updated using the following methods:
 
@@ -2947,7 +2943,7 @@ export const replaceTask = mutation({
 });
 ```
 
-## Deleting documents
+### Deleting documents
 
 Given an existing document ID, the document can be removed from the table with the `db.delete` method.
 
@@ -2963,9 +2959,7 @@ export const deleteTask = mutation({
 });
 ```
 
-# Document IDs
-
-## Example: Relational Data Modeling
+## Document IDs
 
 Every document in Convex has a globally unique string document ID that is automatically generated by the system.
 
@@ -3001,7 +2995,7 @@ const userId: Id<"users"> = user._id;
 
 IDs are strings at runtime, but the `Id` type can be used to distinguish IDs from other strings at compile time.
 
-## References and relationships
+### References and relationships
 
 In Convex, you can reference a document simply by embedding its `Id` in another document:
 
@@ -3029,13 +3023,13 @@ const myBooks = await ctx.db
 
 Using IDs as references can allow you to build a complex data model.
 
-## Trading off deeply nested documents vs. relationships
+### Trading off deeply nested documents vs. relationships
 
 While it's useful that Convex supports nested objects and arrays, you should keep documents relatively small in size. In practice, we recommend limiting Arrays to no more than 5-10 elements and avoiding deeply nested Objects.
 
 Instead, leverage separate tables, documents, and references to structure your data. This will lead to better maintainability and performance as your project grows.
 
-## Serializing IDs
+### Serializing IDs
 
 IDs are strings, which can be easily inserted into URLs or stored outside of Convex.
 
@@ -3072,13 +3066,13 @@ export const getTask = query({
 });
 ```
 
-# Data Types
+## Data Types
 
 All Convex documents are defined as JavaScript objects. These objects can have field values of any of the types below.
 
 You can codify the shape of documents within your tables by defining a schema.
 
-## Convex values
+### Convex values
 
 Convex supports the following types of values:
 
@@ -3094,14 +3088,14 @@ Convex supports the following types of values:
 | Array | `Array` | `[1, 3.2, "abc"]` | `v.array(values)` | `array` | Arrays can have at most 8192 values. |
 | Object | `Object` | `{a: "abc"}` | `v.object({property: value})` | `object` | Convex only supports "plain old JavaScript objects" (objects that do not have a custom prototype). Convex includes all enumerable properties. Objects can have at most 1024 entries. Field names must be nonempty and not start with "$" or "_". |
 
-## System fields
+### System fields
 
 Every document in Convex has two automatically-generated system fields:
 
 - `_id`: The document ID of the document.
 - `_creationTime`: The time this document was created, in milliseconds since the Unix epoch.
 
-## Limits
+### Limits
 
 Convex values must be less than 1MB in total size. This is an approximate limit for now, but if you're running into these limits and would like a more precise method to calculate a document's size, reach out to us. Documents can have nested values, either objects or arrays that contain other Convex types. Convex types can have at most 16 levels of nesting, and the cumulative size of a nested tree of values must be under the 1MB limit.
 
@@ -3111,7 +3105,7 @@ For information on other limits, see [here](https://docs.convex.dev/limits).
 
 If any of these limits don't work for you, let us know!
 
-## Working with dates and times
+### Working with dates and times
 
 Convex does not have a special data type for working with dates and times. How you store dates depends on the needs of your application:
 
@@ -3119,7 +3113,7 @@ Convex does not have a special data type for working with dates and times. How y
 - To get the current UTC timestamp in your function and store it in the database, use `Date.now()`.
 - If you care about a calendar date or a specific clock time, such as when implementing a booking app, you should store the actual date and/or time as a string. If your app supports multiple timezones you should store the timezone as well. ISO8601 is a common format for storing dates and times together in a single string like "2024-03-21T14:37:15Z". If your users can choose a specific time zone you should probably store it in a separate string field, usually using the IANA time zone name (although you could concatenate the two fields with unique character like "|").
 
-# Schemas
+## Schemas
 
 A schema is a description of:
 
@@ -3130,9 +3124,7 @@ While it is possible to use Convex without defining a schema, adding a `schema.t
 
 We recommend beginning your project without a schema for rapid prototyping and then adding a schema once you've solidified your plan. To learn more, see our [Schema Philosophy](link_to_schema_philosophy).
 
-### Example: TypeScript and Schemas
-
-#### Writing Schemas
+### Writing Schemas
 
 Schemas are defined in a `schema.ts` file in your `convex/` directory and look like:
 
@@ -3155,11 +3147,11 @@ export default defineSchema({
 
 This schema (which is based on our users and auth example), has 3 tables: `channels`, `messages`, and `users`. Each table is defined using the `defineTable` function. Within each table, the document type is defined using the validator builder, `v`. In addition to the fields listed, Convex will also automatically add `_id` and `_creationTime` fields. To learn more, see [System Fields](link_to_system_fields).
 
-#### Generating a Schema
+### Generating a Schema
 
 While writing your schema, it can be helpful to consult the Convex Dashboard. The "Generate Schema" button in the "Data" view suggests a schema declaration based on the data in your tables.
 
-#### Validators
+### Validators
 
 The validator builder, `v` is used to define the type of documents in each table. It has methods for each of Convex's types:
 
@@ -3183,7 +3175,7 @@ export default defineSchema({
 
 It additionally allows you to define unions, optional properties, string literals, and more. Argument validation and schemas both use the same validator builder, `v`.
 
-##### Optional Fields
+### Optional Fields
 
 You can describe optional fields by wrapping their type with `v.optional(...)`:
 
@@ -3196,7 +3188,7 @@ defineTable({
 
 This corresponds to marking fields as optional with `?` in TypeScript.
 
-##### Unions
+### Unions
 
 You can describe fields that could be one of multiple types using `v.union`:
 
@@ -3225,7 +3217,7 @@ defineTable(
 
 In this schema, documents either have a `kind` of `"StringDocument"` and a `string` for their `value`, or they have a `kind` of `"NumberDocument"` and a `number` for their `value`.
 
-##### Literals
+### Literals
 
 Fields that are a constant can be expressed with `v.literal`:
 
@@ -3239,7 +3231,7 @@ defineTable({
 });
 ```
 
-##### Any
+### Any
 
 Fields or documents that could take on any value can be represented with `v.any()`:
 
@@ -3251,11 +3243,11 @@ defineTable({
 
 This corresponds to the `any` type in TypeScript.
 
-#### Options
+### Options
 
 These options are passed as part of the `options` argument to `defineSchema`.
 
-##### `schemaValidation: boolean`
+#### `schemaValidation: boolean`
 
 Whether Convex should validate at runtime that your documents match your schema.
 
@@ -3297,7 +3289,7 @@ When `strictTableNameTypes` is disabled, the TypeScript types will allow access 
 
 Regardless of the value of `strictTableNameTypes`, your schema will only validate documents in the tables listed in the schema. You can still create and modify documents in other tables in JavaScript or on the dashboard (they just won't be validated).
 
-#### Schema Validation
+### Schema Validation
 
 Schemas are pushed automatically in `npx convex dev` and `npx convex deploy`.
 
@@ -3387,13 +3379,13 @@ If you need the type for a portion of a document, use the `Infer` type helper.
 
 The `query` and `mutation` functions in `server.js` have the same API as before, but now provide a `db` with more precise types. Functions like `db.insert(table, document)` now understand your schema. Additionally, database queries will now return the correct document type (not `any`).
 
-# Paginated Queries
+## Paginated Queries
 
 Paginated queries are queries that return a list of results in incremental pages.
 
 This can be used to build components with "Load More" buttons or "infinite scroll" UIs where more results are loaded as the user scrolls.
 
-## Example: Paginated Messaging App
+### Example: Paginated Messaging App
 
 Using pagination in Convex is as simple as:
 
@@ -3406,7 +3398,7 @@ Like other Convex queries, paginated queries are completely reactive.
 >
 > Paginated queries are currently a beta feature. If you have feedback or feature requests, let us know on Discord!
 
-## Writing paginated query functions
+### Writing paginated query functions
 
 Convex uses cursor-based pagination. This means that paginated queries return a string called a Cursor that represents the point in the results that the current page ended. To load more results, you simply call the query function again, passing in the cursor.
 
@@ -3479,7 +3471,7 @@ export const listWithTransformation = query({
 });
 ```
 
-## Paginating within React Components
+### Paginating within React Components
 
 To paginate within a React component, use the `usePaginatedQuery` hook. This hook gives you a simple interface for rendering the current items and requesting more. Internally, this hook manages the continuation cursors.
 
@@ -3546,13 +3538,13 @@ export function App() {
 }
 ```
 
-## Reactivity
+### Reactivity
 
 Like any other Convex query functions, paginated queries are completely reactive. Your React components will automatically rerender if items in your paginated list are added, removed or changed.
 
 One consequence of this is that page sizes in Convex may change! If you request a page of 10 items and then one item is removed, this page may "shrink" to only have 9 items. Similarly if new items are added, a page may "grow" beyond its initial size.
 
-## Paginating manually
+### Paginating manually
 
 If you're paginating outside of React, you can manually call your paginated function multiple times to collect the items:
 
@@ -3590,13 +3582,13 @@ async function getAllMessages() {
 getAllMessages();
 ```
 
-# Indexes
+## Indexes
 
 Indexes are a data structure that allow you to speed up your document queries by telling Convex how to organize your documents. Indexes also allow you to change the order of documents in query results.
 
 For a more in-depth introduction to indexing, see [Indexes and Query Performance](link_to_indexes_and_query_performance).
 
-## Defining Indexes
+### Defining Indexes
 
 Indexes are defined as part of your Convex schema. Each index consists of:
 
@@ -3634,11 +3626,11 @@ You may notice that the first deploy that defines an index is a bit slower than 
 
 You can feel free to query an index in the same deploy that defines it. Convex will ensure that the index is backfilled before the new query and mutation functions are registered.
 
-## Be Careful When Removing Indexes
+### Be Careful When Removing Indexes
 
 In addition to adding new indexes, `npx convex deploy` will delete indexes that are no longer present in your schema. Make sure that your indexes are completely unused before removing them from your schema!
 
-## Querying Documents Using Indexes
+### Querying Documents Using Indexes
 
 A query for "messages in channel created 1-2 minutes ago" over the `by_channel` index would look like:
 
@@ -3684,7 +3676,7 @@ then the query's performance would be based on the number of messages in the `ch
 
 If the index range is not specified, all documents in the index will be considered in the query.
 
-## Picking a Good Index Range
+### Picking a Good Index Range
 
 For performance, define index ranges that are as specific as possible! If you are querying a large table and you're unable to add any equality conditions with `.eq`, you should consider defining a new index.
 
@@ -3702,7 +3694,7 @@ const messages = await ctx.db
 
 In this case, the performance of this query will be based on how many messages are in the channel. Convex will consider each message in the channel and only return the messages where the `user` field matches `myUserId`.
 
-## Sorting with Indexes
+### Sorting with Indexes
 
 Queries that use `withIndex` are ordered by the columns specified in the index. The order of the columns in the index dictates the priority for sorting. The values of the columns listed first in the index are compared first. Subsequent columns are only compared as tie breakers only if all earlier columns match.
 
@@ -3740,7 +3732,7 @@ If you use an index without a range expression, you should always use one of the
 
 These APIs allow you to efficiently limit your query to a reasonable size without performing a full table scan.
 
-## Full Table Scans
+### Full Table Scans
 
 When your query fetches documents from the database, it will scan the rows in the range you specify. If you are using `.collect()`, for instance, it will scan all of the rows in the range. So if you use `withIndex` without a range expression, you will be scanning the whole table, which can be slow when your table has thousands of rows. `.filter()` doesn't affect which documents are scanned. Using `.first()` or `.unique()` or `.take(n)` will only scan rows until it has enough documents.
 
@@ -3755,7 +3747,7 @@ const topScoringPlayers = await ctx.db
   .take(10);
 ```
 
-## Limits
+### Limits
 
 Convex supports indexes containing up to 16 fields. You can define 32 indexes on each table. Indexes can't contain duplicate fields.
 
@@ -3763,7 +3755,7 @@ No reserved fields (starting with `_`) are allowed in indexes. The `_creationTim
 
 The `by_creation_time` index is created automatically (and is what is used in database queries that don't specify an index). The `by_id` index is reserved.
 
-# Introduction to Indexes and Query Performance
+### Introduction to Indexes and Query Performance
 
 How do I ensure my Convex database queries are fast and efficient? When should I define an index? What is an index?
 
@@ -3774,7 +3766,7 @@ If you already have a strong understanding of database queries and indexes you c
 - [Reading Data](https://docs.convex.dev/api/reading-data)
 - [Indexes](https://docs.convex.dev/api/indexes)
 
-## A Library of Documents
+### A Library of Documents
 
 You can imagine that Convex is a physical library storing documents as physical books. In this world, every time you add a document to Convex with `db.insert("books", {...})` a librarian places the book on a shelf.
 
@@ -3796,7 +3788,7 @@ const lastBook = await ctx.db.query("books").order("desc").first();
 
 This is the same query but we've swapped the order to descending. In the library, this means that the librarian will start on the right edge of the shelf and scan right-to-left. The librarian still only needs to look at a single book to determine the result so this query is also extremely fast.
 
-## Full Table Scans
+### Full Table Scans
 
 Now imagine that someone shows up at the library and asks "what books do you have by Jane Austen?"
 
@@ -3817,7 +3809,7 @@ If your Convex table has a small number of documents, this is fine! Full table s
 
 In the library analogy, this kind of query is fine if the library has a single shelf. As the library expands into a bookcase with many shelves or many bookcases, this approach becomes infeasible.
 
-## Card Catalogs
+### Card Catalogs
 
 How can we more efficiently find books given an author?
 
@@ -3841,7 +3833,7 @@ When a patron asks for "books by Jane Austen", the librarian can now:
 
 This is quite fast because the librarian can quickly find the index cards for Jane Austen. It's still a little bit of work to find the book for each card but the number of index cards is small so this is quite fast.
 
-## Indexes
+### Indexes
 
 Database indexes work based on the same concept! With Convex you can define an index with:
 
@@ -3877,7 +3869,7 @@ This query instructs Convex to go to the `by_author` index and find all the entr
 
 The performance of this query is based on the number of documents where `doc.author === "Jane Austen"` which should be quite small. We've dramatically sped up the query!
 
-## Backfilling and Maintaining Indexes
+### Backfilling and Maintaining Indexes
 
 One interesting detail to think about is the work needed to create this new structure. In the library, the librarian must go through every book on the shelf and put a new index card for each one in the card catalog sorted by author. Only after that can the librarian trust that the card catalog will give it correct results.
 
@@ -3887,7 +3879,7 @@ Similarly, even after an index is defined, Convex will have to do a bit of extra
 
 If you are defining a few indexes there is no need to worry about the maintenance cost. As you define more indexes, the cost to maintain them grows because every insert needs to update every index. This is why Convex has a limit of 32 indexes per table. In practice most applications define a handful of indexes per table to make their important queries efficient.
 
-## Indexing Multiple Fields
+### Indexing Multiple Fields
 
 Now imagine that a patron shows up at the library and would like to check out *Foundation* by Isaac Asimov. Given our index on author, we can write a query that uses the index to find all the books by Isaac Asimov and then examines the title of each book to see if it's *Foundation*.
 
@@ -3973,7 +3965,7 @@ The Convex TypeScript types in the `withIndex` make this clear because they requ
 
 In this case, the best option is probably to create the separate `by_title` index to facilitate this query.
 
-## Conclusions
+### Conclusions
 
 Congrats! You now understand how queries and indexes work within Convex!
 
@@ -3984,7 +3976,7 @@ Here are the main points we've covered:
 - In Convex, queries use the `withIndex` method to express the portion of the query that uses the index. The performance of a query is based on how many documents are in the index range expression.
 - Convex also supports compound indexes that index multiple fields.
 
-# Import & Export
+## Import & Export
 
 If you're bootstrapping your app from existing data, Convex provides three ways to get the data in:
 
@@ -3997,7 +3989,7 @@ You can export data from Convex in two ways:
 1. Snapshot export via the dashboard. Great for running a quick analysis.
 2. Streaming export to any external database via Fivetran or Airbyte. Great for connecting to a custom BI setup (e.g., Snowflake, Databricks, or BigQuery).
 
-# Exporting Data Snapshots
+## Exporting Data Snapshots
 
 You can export your data from Convex using Snapshot export, which you can find in the settings page of your project in the dashboard.
 
@@ -4007,7 +3999,7 @@ Alternatively, you can export the same data with the command line:
 npx convex export --path ~/Downloads
 ```
 
-## Snapshot export is in beta
+### Snapshot export is in beta
 
 Snapshot export is currently a beta feature. If you have feedback or feature requests, let us know on [Discord](https://discord.com)!
 
@@ -4017,7 +4009,7 @@ Each export is a consistent snapshot of your data at the time of your request. T
 
 Exported ZIP files also optionally contain data from file storage in a `_storage` folder, with metadata like IDs and checksums in `_storage/documents.jsonl` and each file as `_storage/<id>`.
 
-## Latest Export View
+### Latest Export View
 
 ### Using the snapshot
 
@@ -4035,7 +4027,7 @@ The snapshot ZIP file only contains the documents for your tables. In particular
 - Pending scheduled functions. You can access pending scheduled functions in the `_scheduled_functions` system table.
 - Environment variables. Environment variables can be copied from Settings in the Convex dashboard.
 
-## FAQ
+### FAQ
 
 **Can I use snapshot export as an automated backup?**
 
@@ -4047,19 +4039,13 @@ Each export is accessible for up to 14 days (if no more exports are requested). 
 
 Snapshot export uses database bandwidth to read all documents, and file bandwidth if the export includes file storage. You can observe this bandwidth in the usage dashboard as function name `_cli/export`. Check the limits docs for pricing details.
 
-# Importing Data Snapshots
+## Importing Data Snapshots
 
 You can import data into Convex from a local file using the command line.
 
 ```
 npx convex import
 ```
-
-## Snapshot import is in beta
-
-Snapshot import is currently a beta feature. If you have feedback or feature requests, let us know on Discord!
-
-Use `--help` to see all options. The most common flows are described here.
 
 ### Single table import
 
@@ -4089,7 +4075,7 @@ Import a ZIP file into a Convex deployment, where the ZIP file has been download
 
 Imports where tables have existing data will fail by default, but you can specify `--replace` to replace existing data in tables mentioned in the ZIP file.
 
-## Use cases
+### Use cases
 
 1. Restore a deployment from backup. Download a snapshot export when tables are in a good state, and restore from this backup if needed.
    ```
@@ -4115,7 +4101,7 @@ Imports where tables have existing data will fail by default, but you can specif
    npx convex import --replace --table <tableNameToClear> empty_file.jsonl
    ```
 
-## Features
+### Features
 
 - Snapshot import is the only way to create documents with pre-existing `_id` and `_creationTime` fields.
 - The `_id` field must match Convex's ID format.
@@ -4127,14 +4113,16 @@ Imports where tables have existing data will fail by default, but you can specif
 - While JSON and JSONLines can import arbitrary JSON values, ZIP imports can additionally import other Convex values: `Int64`, `Bytes`, etc. Types are preserved in the ZIP file through the `generated_schema.jsonl` file.
 - Snapshot import of ZIP files that include file storage import the files and preserve `_storage` documents, including their `_id`, `_creationTime`, and `contentType` fields.
 
-## Warnings
+### Warnings
 
 - Streaming Export (Fivetran or Airbyte) does not understand snapshot imports, similar to table deletion and creation and some schema changes. We recommend resetting streaming export sync after a snapshot import.
 - Avoid changing the ZIP file between downloading it from Snapshot Export and importing it with `npx convex import`. Some manual changes of the ZIP file may be possible, but remain undocumented. Please share your use case and check with the Convex team in Discord.
 - Snapshot import is not always supported when importing into a deployment that was created before Convex version 1.7. The import may work, especially when importing a ZIP snapshot from a deployment created around the same time as the target deployment. As a special case, snapshot import can always restore a deployment from its own backup. Reach out in Discord if you encounter issues, as there may be a workaround.
 - Snapshot import uses database bandwidth to write all documents, and file bandwidth if the export includes file storage. You can observe this bandwidth in the usage dashboard as function name `_cli/import` and associated cost in the limits docs.
 
-# System Tables
+## Advanced
+
+### System Tables
 
 System tables enable read-only access to metadata for built-in Convex features. Currently there are two system tables exposed:
 
@@ -4143,7 +4131,7 @@ System tables enable read-only access to metadata for built-in Convex features. 
 
 You can read data from system tables using the `db.system.get` and `db.system.query` methods, which work the same as the standard `db.get` and `db.query` methods. Queries reading from system tables are reactive and realtime just like queries reading from all other tables, and pagination can be used to enumerate all documents even when there are too many to read in a single query.
 
-# Schema Philosophy
+### Schema Philosophy
 
 With Convex there is no need to write any `CREATE TABLE` statements, or think through your stored table structure ahead of time so you can name your fields and types. You simply put your objects into Convex and keep building your app!
 
@@ -4157,11 +4145,11 @@ The good news is Convex is always typed. It's just *implicitly* typed! When you 
 
 Once you are ready to formalize your schema, you can define it using our schema builder to enable schema validation and generate types based on it.
 
-# OCC and Atomicity
+### OCC and Atomicity
 
 In Queries, we mentioned that determinism as important in the way optimistic concurrency control (OCC) was used within Convex. In this section, we'll dive much deeper into why.
 
-## Convex Financial, Inc.
+### Convex Financial, Inc.
 
 Imagine that you're building a banking app, and therefore your databases stores accounts with balances. You want your users to be able to give each other money, so you write a mutation function that transfers funds from one user's account to another.
 
@@ -4229,7 +4217,7 @@ WRITE Alice = $9, Bob = $16
 
 This is akin to being unable to push your Git repository because you're not at HEAD. We all know in that circumstance, we need to pull, and rebase or merge, etc.
 
-## When OCC Loses, Determinism Wins
+### When OCC Loses, Determinism Wins
 
 A naive optimistic concurrency control solution would be to solve this the same way that Git does: require the user/application to resolve the conflict and determine if it is safe to retry.
 
@@ -4239,11 +4227,11 @@ The determinism means that we can simply re-run the transaction; you never need 
 
 > In fact, the Git analogy stays very apt. An OCC conflict means we cannot push because our HEAD is out of date, so we need to rebase our changes and try again. And determinism is what guarantees there is never a "merge conflict", so (unlike with Git) this rebase operation will always eventually succeed without developer intervention.
 
-## Snapshot Isolation vs Serializability
+### Snapshot Isolation vs Serializability
 
 It is common for optimistic multi-version concurrency control databases to provide a guarantee of *snapshot isolation*. This isolation level provides the illusion that all transactions execute on an atomic snapshot of the data but it is vulnerable to anomalies where certain combinations of concurrent transactions can yield incorrect results. The implementation of optimistic concurrency control in Convex instead provides *true serializability* and will yield correct results regardless of what transactions are issued concurrently.
 
-## No Need to Think About This
+### No Need to Think About This
 
 The beauty of this approach is that you can simply write your mutation functions as if they will always succeed, and always be guaranteed to be atomic.
 
@@ -4258,8 +4246,6 @@ Turns out Convex is automatically realtime! You don't have to do anything specia
 ## Convex & Clerk
 
 Clerk is an authentication platform providing login via passwords, social identity providers, one-time email or SMS access codes, and multi-factor authentication and basic user management.
-
-## Example: Convex Authentication with Clerk
 
 If you're using Next.js, see the [Next.js setup guide](https://docs.clerk.com/docs/nextjs-setup).
 
@@ -4335,7 +4321,7 @@ This guide assumes you already have a working React app with Convex. If not, fol
    );
    ```
 
-## Show UI based on authentication state
+### Show UI based on authentication state
 
 You can control which UI is shown when the user is signed in or signed out with the provided components from `"convex/react"` and `"@clerk/clerk-react"`.
 
@@ -4370,7 +4356,7 @@ function Content() {
 export default App;
 ```
 
-## Use authentication state in your Convex functions
+### Use authentication state in your Convex functions
 
 If the client is authenticated, you can access the information stored in the JWT via `ctx.auth.getUserIdentity`.
 
@@ -4396,7 +4382,7 @@ export const getForCurrentUser = query({
 });
 ```
 
-## Login and logout Flows
+### Login and logout Flows
 
 Now that you have everything set up, you can use the `SignInButton` component to create a login flow for your app.
 
@@ -4416,7 +4402,7 @@ function App() {
 
 To enable a logout flow, you can use the `SignOutButton` or the `UserButton`, which opens a dialog that includes a sign-out button.
 
-## Logged-in and logged-out views
+### Logged-in and logged-out views
 
 Use the `useConvexAuth()` hook instead of Clerk's `useAuth` hook when you need to check whether the user is logged in or not. The `useConvexAuth` hook makes sure that the browser has fetched the auth token needed to make authenticated requests to your Convex backend, and that the Convex backend has validated it:
 
@@ -4450,7 +4436,7 @@ function App() {
 }
 ```
 
-## User information in React
+### User information in React
 
 You can access information about the authenticated user, like their name, from Clerk's `useUser` hook. See the [User doc](https://docs.clerk.com/docs/user) for the list of available fields:
 
@@ -4463,11 +4449,11 @@ export default function Badge() {
 }
 ```
 
-## Configuring dev and prod instances
+### Configuring dev and prod instances
 
 To configure a different Clerk instance between your Convex development and production deployments, you can use environment variables configured on the Convex dashboard.
 
-### Configuring the backend
+#### Configuring the backend
 
 First, change your `auth.config.ts` file to use an environment variable:
 
@@ -4496,7 +4482,7 @@ Similarly, on the Convex dashboard, switch to your production deployment in the 
 
 Now switch to the new configuration by running `npx convex deploy`.
 
-### Configuring a React client
+#### Configuring a React client
 
 To configure your client, you can use environment variables as well. The exact name of the environment variables and the way to refer to them depend on each client platform (Vite vs. Next.js, etc.). Refer to our corresponding Quickstart or the relevant documentation for the platform you're using.
 
@@ -4537,7 +4523,7 @@ VITE_CLERK_PUBLISHABLE_KEY="pk_test_..."
 
 Set the environment variable in your production environment depending on your hosting platform. See [Hosting](https://docs.convex.dev/hosting).
 
-## Debugging authentication
+### Debugging authentication
 
 If a user goes through the Clerk login flow successfully, and after being redirected back to your page, `useConvexAuth` gives `isAuthenticated: false`, it's possible that your backend isn't correctly configured.
 
@@ -4545,7 +4531,7 @@ The `auth.config.ts` file in your `convex/` directory contains a list of configu
 
 For more thorough debugging steps, see [Debugging Authentication](https://docs.convex.dev/authentication/debugging).
 
-## Under the hood
+### Under the hood
 
 The authentication flow looks like this under the hood:
 
@@ -4560,7 +4546,7 @@ The authentication flow looks like this under the hood:
 9. `ConvexProviderWithClerk` takes care of refetching the token when needed to make sure the user stays authenticated with your backend.
 
 
-# Auth in Functions
+## Auth in Functions
 
 Within a Convex function, you can access information about the currently logged-in user by using the `auth` property of the `QueryCtx`, `MutationCtx`, or `ActionCtx` object:
 
@@ -4582,7 +4568,7 @@ export const myMutation = mutation({
 });
 ```
 
-## User identity fields
+### User identity fields
 
 The `UserIdentity` object returned by `getUserIdentity` is guaranteed to have `tokenIdentifier`, `subject`, and `issuer` fields. Which other fields it will include depends on the identity provider used and the configuration of JWT tokens and OpenID scopes.
 
@@ -4606,11 +4592,11 @@ export const myMutation = mutation({
 });
 ```
 
-## Clerk claims configuration
+### Clerk claims configuration
 
 If you're using Clerk, the fields returned by `getUserIdentity` are determined by your JWT template's Claims config. If you've set custom claims, they will be returned by `getUserIdentity` as well.
 
-## HTTP Actions
+### HTTP Actions
 
 You can also access the user identity from an HTTP action `ctx.auth.getUserIdentity()`, by calling your endpoint with an `Authorization` header including a JWT token:
 
@@ -4625,9 +4611,9 @@ fetch("https://<deployment name>.convex.site/myAction", {
 });
 ```
 
-# Authentication: Database
+## Database
 
-## Storing Users in the Convex Database
+### Storing Users in the Convex Database
 
 If you're using Convex Auth, the user information is already stored in your database. There's nothing else you need to implement.
 
@@ -4643,9 +4629,8 @@ There are two ways you can choose from for storing user information in your data
 
 ### Call a Mutation from the Client
 
-#### Example: Convex Authentication with Clerk
 
-##### (Optional) Users Table Schema
+### (Optional) Users Table Schema
 
 You can define a "users" table, optionally with an index for efficient looking up the users in the database.
 
@@ -4661,7 +4646,7 @@ users: defineTable({
 }).index("by_token", ["tokenIdentifier"]),
 ```
 
-##### Mutation for Storing Current User
+### Mutation for Storing Current User
 
 This is an example of a mutation that stores the user's name and `tokenIdentifier`:
 
@@ -4820,11 +4805,11 @@ export const send = mutation({
 });
 ```
 
-## Loading Users by Their ID
+### Loading Users by Their ID
 
 The information about other users can be retrieved via their IDs:
 
-### `convex/messages.ts`
+`convex/messages.ts`
 
 ```typescript
 import { query } from "./_generated/server";
@@ -4848,13 +4833,12 @@ export const list = query({
 });
 ```
 
-## Set Up Webhooks
+### Set Up Webhooks
 
 This guide will use Clerk, but Auth0 can be set up similarly via Auth0 Actions.
 
 With this implementation Clerk will call your Convex backend via an HTTP endpoint any time a user signs up, updates or deletes their account.
 
-### Example: Convex Authentication with Clerk and Webhooks
 
 #### Configure the Webhook Endpoint in Clerk
 
@@ -5027,13 +5011,13 @@ export default http;
 
 If you deploy your code now and sign in, you should see the user being created in your Convex database.
 
-## Using the Current User's Document
+### Using the Current User's Document
 
 You can use the helpers defined before to retrieve the current user's document.
 
 Now that you have users stored as documents in your Convex database, you can use their IDs as foreign keys in other documents:
 
-### `convex/messages.ts`
+`convex/messages.ts`
 
 ```typescript
 import { v } from "convex/values";
@@ -5049,11 +5033,11 @@ export const send = mutation({
 });
 ```
 
-## Loading Users by Their ID
+### Loading Users by Their ID
 
 The information about other users can be retrieved via their IDs:
 
-### `convex/messages.ts`
+`convex/messages.ts`
 
 ```typescript
 export const list = query({
@@ -5075,13 +5059,13 @@ export const list = query({
 });
 ```
 
-## Waiting for Current User to Be Stored
+### Waiting for Current User to Be Stored
 
 If you want to use the current user's document in a query, make sure that the user has already been stored. You can do this by explicitly checking for this condition before rendering the components that call the query, or before redirecting to the authenticated portion of your app.
 
 For example you can define a hook that determines the current authentication state of the client, taking into account whether the current user has been stored:
 
-### `src/useCurrentUser.ts`
+`src/useCurrentUser.ts`
 
 ```typescript
 import { useConvexAuth, useQuery } from "convex/react";
@@ -5100,7 +5084,7 @@ export function useCurrentUser() {
 
 And then you can use it to render the appropriate components:
 
-### `src/App.tsx`
+`src/App.tsx`
 
 ```typescript
 import { useCurrentUser } from "./useCurrentUser";
@@ -5121,13 +5105,13 @@ export default function App() {
 }
 ```
 
-# Debugging Authentication
+## Debugging Authentication
 
 You have followed one of our authentication guides but something is not working. You have double checked that you followed all the steps, and that you used the correct secrets, but you are still stuck.
 
-## Frequently Encountered Issues
+### Frequently Encountered Issues
 
-### `ctx.auth.getUserIdentity()` returns `null` in a query
+`ctx.auth.getUserIdentity()` returns `null` in a query
 
 This often happens when subscribing to queries via `useQuery` in React, without waiting for the client to be authenticated. Even if the user has been logged-in previously, it takes some time for the client to authenticate with the Convex backend. Therefore on page load, `ctx.auth.getUserIdentity()` called within a query returns `null`.
 
@@ -5140,7 +5124,7 @@ If you are using `fetchQuery` for Next.js Server Rendering, make sure you are ex
 
 If this hasn't helped, follow the steps below to resolve your issue.
 
-## Step 1: Check whether authentication works on the backend
+Step 1: Check whether authentication works on the backend
 
 Add the following code to the beginning of your function (query, mutation, action or http action):
 
@@ -5174,7 +5158,7 @@ Proceed to step 2.
 
 Great, you are all set!
 
-## Step 2: Check whether authentication works on the frontend
+Step 2: Check whether authentication works on the frontend
 
 No matter which client you use, it must pass a JWT token to your backend for authentication to work.
 
@@ -5235,7 +5219,7 @@ Open [https://jwt.io/](https://jwt.io/), scroll down and paste the token in the 
 
 If you see a valid JWT token, repeat step 1. If you still don't see correct identity, proceed to step 3.
 
-## Step 3: Check that backend configuration matches frontend configuration
+Step 3: Check that backend configuration matches frontend configuration
 
 You have a valid JWT token on the frontend, and you know that it is being passed to the backend, but the backend is not validating it.
 
@@ -5291,9 +5275,8 @@ Convex allows you to schedule functions to run in the future. This allows you to
 
 Scheduled functions are stored in the database. This means you can schedule functions minutes, days, and even months in the future. Scheduling is resilient against unexpected downtime or system restarts.
 
-### Example: Scheduling
 
-#### Scheduling functions
+### Scheduling functions
 
 You can schedule public functions and internal functions from mutations and actions via the scheduler provided in the respective function context.
 
@@ -5418,17 +5401,17 @@ What `cancel` does depends on the state of the scheduled function:
 - If it hasn't started running, it won't run.
 - If it already started, it will continue to run, but any functions it schedules will not run.
 
-#### Debugging
+### Debugging
 
 You can view logs from previously executed scheduled functions in the Convex dashboard Logs view. You can view and cancel yet to be executed functions in the Functions view.
 
-#### Error handling
+### Error handling
 
 Once scheduled, mutations are guaranteed to be executed exactly once. Convex will automatically retry any internal Convex errors, and only fail on developer errors. See Error Handling for more details on different error types.
 
 Since actions may have side effects, they are not automatically retried by Convex. Thus, actions will be executed at most once, and permanently fail if there are transient errors while executing them. Developers can retry those manually by scheduling a mutation that checks if the desired outcome has been achieved and if not schedule the action again.
 
-#### Auth
+### Auth
 
 The auth is not propagated from the scheduling to the scheduled function. If you want to authenticate or check authorization, you'll have to pass the requisite user information in as a parameter.
 
@@ -5436,9 +5419,8 @@ The auth is not propagated from the scheduling to the scheduled function. If you
 
 Convex allows you to schedule functions to run on a recurring basis. For example, cron jobs can be used to clean up data at a regular interval, send a reminder email at the same time every month, or schedule a backup every Saturday.
 
-### Example: Cron Jobs
 
-#### Defining your cron jobs
+### Defining your cron jobs
 
 Cron jobs are defined in a `crons.ts` file in your `convex/` directory and look like:
 
@@ -5478,17 +5460,17 @@ The second argument is the schedule at which the function should run, see *Suppo
 
 The third argument is the name of the public function or internal function, either a mutation or an action.
 
-#### Supported schedules
+### Supported schedules
 
 1. `crons.interval()` runs a function every specified number of seconds, minutes, or hours. The first run occurs when the cron job is first deployed to Convex. Unlike traditional crons, this option allows you to have seconds-level granularity.
 2. `crons.cron()` the traditional way of specifying cron jobs by a string with five fields separated by spaces (e.g. "* * * * *"). Times in cron syntax are in the UTC timezone. [Crontab Guru](https://crontab.guru/) is a helpful resource for understanding and creating schedules in this format.
 3. `crons.hourly()`, `crons.daily()`, `crons.weekly()`, `crons.monthly()` provide an alternative syntax for common cron schedules with explicitly named arguments.
 
-#### Viewing your cron jobs
+### Viewing your cron jobs
 
 You can view all your cron jobs in the Convex dashboard cron jobs view. You can view added, updated, and deleted cron jobs in the logs and history view. Results of previously executed runs of the cron jobs are also available in the logs view.
 
-#### Error handling
+### Error handling
 
 Mutations and actions have the same guarantees that are described in *Error handling for scheduled functions*.
 
@@ -5714,9 +5696,7 @@ Files can be uploaded to Convex from a client and stored directly, see *Upload*.
 
 Alternatively, files can also be stored after they've been fetched or generated in actions and HTTP actions. For example, you might call a third-party API to generate an image based on a user prompt and then store that image in Convex.
 
-### Example: Dall-E Storage & Action
-
-#### Storing files in actions
+### Storing files in actions
 
 Storing files in actions is similar to uploading a file via an HTTP action. The action takes these steps:
 
@@ -5964,14 +5944,13 @@ Embeddings and vector search enable you to provide useful context to LLMs for AI
 
 Vector search is consistent and fully up-to-date. You can write a vector and immediately read it from a vector search. Unlike full text search, however, vector search is only available in Convex actions.
 
-### Example: Vector Search App
 
 To use vector search you need to:
 
 1. Define a vector index.
 2. Run a vector search from within an action.
 
-#### Defining Vector Indexes
+### Defining Vector Indexes
 
 Like database indexes, vector indexes are a data structure that is built in advance to enable efficient querying. Vector indexes are defined as part of your Convex schema.
 
@@ -5998,7 +5977,7 @@ foods: defineTable({
 
 You can specify vector and filter fields on nested documents by using a dot-separated path like `properties.name`.
 
-#### Running Vector Searches
+### Running Vector Searches
 
 Unlike database queries or full text search, vector searches can only be performed in a Convex action.
 
@@ -6091,7 +6070,7 @@ export const similarFoods = action({
 });
 ```
 
-#### Filter Expressions
+### Filter Expressions
 
 As mentioned above, vector searches support efficiently filtering results by additional fields on your document using either exact equality on a single field, or an OR of expressions.
 
@@ -6117,7 +6096,7 @@ filter: (q) =>
 
 Both `cuisine` and `mainIngredient` would need to be included in the `filterFields` in the `.vectorIndex` definition.
 
-#### Other Filtering
+### Other Filtering
 
 Results can be filtered based on how similar they are to the provided vector using the `_score` field in your action:
 
@@ -6207,7 +6186,7 @@ The example above used a query to load data and return it from an action. Since 
 
 The Vector Search Demo App uses this strategy to show similar movies with a reactive "Votes" count.
 
-#### Limits
+### Limits
 
 Convex supports millions of vectors today. This is an ongoing project and we will continue to scale this offering out with the rest of Convex.
 
@@ -6236,8 +6215,6 @@ Full text search allows you to find Convex documents that approximately match a 
 Unlike normal document queries, search queries look within a string field to find the keywords. This can be used to build search features within your app like searching for messages that contain certain words.
 
 Search queries are automatically reactive, consistent, transactional, and work seamlessly with pagination. They even include new documents created with a mutation!
-
-### Example: Search App
 
 To use full text search you need to:
 
@@ -6427,12 +6404,6 @@ You can set up a separate project as a *staging environment* to test against. Se
 
 The `convex-test` library provides a mock implementation of the Convex backend in JavaScript. It enables fast automated testing of the logic in your functions.
 
-### Example
-
-The library includes a test suite which you can browse to see examples of using it.
-
-## Get Started
-
 ### Install test dependencies
 
 Install Vitest and the `convex-test` library.
@@ -6501,7 +6472,7 @@ npm run test
 
 If you're not familiar with Vitest or Jest, read the [Vitest Getting Started docs](https://vitest.dev/guide/) first.
 
-### `convexTest`
+`convexTest`
 
 The library exports a `convexTest` function which should be called at the start of each of your tests. The function returns an object which is by convention stored in the `t` variable and which provides methods for exercising your Convex functions.
 
@@ -6522,7 +6493,7 @@ Passing in the schema is required for the tests to correctly implement schema va
 
 If you don't have a schema, call `convexTest()` with no argument.
 
-### Calling functions with `t.query`, `t.mutation` and `t.action`
+Calling functions with `t.query`, `t.mutation` and `t.action`
 
 Your test can call public and internal Convex functions in your project:
 
@@ -7066,29 +7037,29 @@ Initial data can be set up on a Convex preview deployment by running a function.
 
 Note that if the function call fails, the deploy command will fail, but the new preview deployment will have already been provisioned. Best course of action is to fix the issue in the function and redeploy.
 
-# Integrations
+## Integrations
 
 Convex integrates with a variety of supported third-party tools for log streaming and exception reporting.
 
-## Log Streams
+### Log Streams
 
 Log Streams enable streaming of log events from your Convex deployment to supported destinations, such as Axiom, Datadog, or a custom webhook.
 
-## Exception Reporting
+### Exception Reporting
 
 Exception Reporting gives visibility into errors in your Convex function executions.
 
-## Configuring an Integration
+### Configuring an Integration
 
 To configure an integration, navigate to the Deployment Settings in the Dashboard, and the "Integrations" tab in the sidebar. This page provides a list of your configured integrations, their current health status, and other integrations available to be configured. To configure an integration, click on the card and follow the setup directions.
 
 ![Integrations Page](https://example.com/integrations-page.png)
 
-## Deleting an Integration
+### Deleting an Integration
 
 To remove an integration and stop further events from being piped out to the configured destination, select the menu icon in the upper-right corner of a configured panel and select "Delete integration". After confirming, the integration will stop running within a few seconds.
 
-## Log Streams
+### Log Streams
 
 Log streams enable streaming of events such as function executions and `console.log`s from your Convex deployment to supported destinations, such as Axiom, Datadog, or a custom webhook.
 
@@ -7100,7 +7071,7 @@ Log streams require a Convex Pro plan. [Learn more about our plans or upgrade](h
 
 *Log streams are currently a beta feature.* If you have feedback or feature requests, let us know on [Discord](https://discord.gg/convex)!
 
-### Configuring log streams
+#### Configuring log streams
 
 We currently support the following log streams, with plans to support many more:
 
@@ -7110,7 +7081,7 @@ We currently support the following log streams, with plans to support many more:
 
 See the instructions for [configuring an integration](https://www.convex.com/docs/integrations/log-streams). The specific information needed for each log stream is covered below.
 
-#### Axiom
+##### Axiom
 
 Configuring an Axiom log stream requires specifying:
 
@@ -7118,7 +7089,7 @@ Configuring an Axiom log stream requires specifying:
 - An Axiom API key
 - An optional list of attributes and their values to be included in all log events sent to Axiom. These will be sent via the `attributes` field in the Ingest API.
 
-#### Datadog
+##### Datadog
 
 Configuring a Datadog log stream requires specifying:
 
@@ -7126,13 +7097,11 @@ Configuring a Datadog log stream requires specifying:
 - A Datadog API key
 - A comma-separated list of tags that will be passed using the `ddtags` field in all payloads sent to Datadog. This can be used to include any other metadata that can be useful for querying or categorizing your Convex logs ingested by your Datadog deployment.
 
-#### Webhook
+##### Webhook
 
 A webhook log stream is the simplest and most generic stream, allowing piping logs via POST requests to any URL you configure. The only parameter required to set up this stream is the desired webhook URL.
 
 A request to this webhook contains as its body a JSON array of events in the schema defined below.
-
-### Log event schema (beta)
 
 *Info: Log streams configured before May 23, 2024 will use the legacy format documented on this page. We recommend updating your log stream to use the new format.*
 
@@ -7145,7 +7114,7 @@ All events will have the following two fields:
 - `topic`: `string`, categorizes a log event, one of `["verification", "console", "function_execution", "audit_log"]`
 - `timestamp`: `number`, Unix epoch timestamp in milliseconds as an integer
 
-#### `verification` events
+`verification` events
 
 This is an event sent to confirm the log stream is working. Schema:
 
@@ -7153,7 +7122,7 @@ This is an event sent to confirm the log stream is working. Schema:
 - `timestamp`: Unix epoch timestamp in milliseconds
 - `message`: `string`
 
-#### `console` events
+`console` events
 
 Convex function logs via the `console` API.
 
@@ -7183,7 +7152,7 @@ Example event for `console.log("Sent message!")` from a mutation:
 }
 ```
 
-#### `function_execution` events
+`function_execution` events
 
 These events occur whenever a function is run.
 
@@ -7231,7 +7200,7 @@ Example event for a query:
 }
 ```
 
-##### Function fields
+Function fields
 
 The following fields are added under `function` for all `console` and `function_execution` events:
 
@@ -7240,7 +7209,7 @@ The following fields are added under `function` for all `console` and `function_
 - `cached`: `optional boolean`, for queries this denotes whether this event came from a cached function execution
 - `request_id`: `string`, the request ID of the function
 
-#### `audit_log` events
+`audit_log` events
 
 These events represent changes to your deployment, which also show up in the History tab in the dashboard.
 
@@ -7262,13 +7231,13 @@ Example `push_config` audit log:
 }
 ```
 
-### Guarantees
+#### Guarantees
 
 Log events provide a best-effort delivery guarantee. Log streams are buffered in-memory and sent out in batches to your deployment's configured streams. This means that logs can be dropped if ingestion throughput is too high. Similarly, due to network retries, it is possible for a log event to be duplicated in a log stream.
 
 That's it! Your logs are now configured to stream out. If there is a log streaming destination that you would like to see supported, please [let us know](https://discord.gg/convex)!
 
-## Exception Reporting
+### Exception Reporting
 
 Configure exception reporting to gain visibility into errors from your Convex function executions. Convex supports integration with Sentry.
 
@@ -7305,7 +7274,7 @@ Convex automatically tags exception events on their way to Sentry with the follo
 1. Sentry Exceptions may take a minute or two to propagate to Sentry.
 2. Convex's built-in Sentry support does not yet support the advanced customization provided by the Sentry SDK.
 
-## Streaming Data in and out of Convex
+### Streaming Data in and out of Convex
 
 Fivetran and Airbyte are data integration platforms that allow you to sync your Convex data with other databases.
 
@@ -7313,11 +7282,11 @@ Fivetran enables streaming export from Convex to any of their supported destinat
 
 Using Airbyte enables streaming import from any of their supported sources into Convex and streaming export from Convex into any of their supported destinations. The Convex team maintains a Convex source connector for streaming export and a Convex destination connector for streaming import.
 
-### Fivetran & Airbyte integrations are in beta
+#### Fivetran & Airbyte integrations are in beta
 
 Fivetran & Airbyte integrations are currently a beta feature. If you have feedback or feature requests, let us know on Discord!
 
-### Streaming Export
+#### Streaming Export
 
 Exporting data can be useful for handling workloads that aren't supported by Convex directly. Some use cases include:
 
@@ -7329,7 +7298,7 @@ Streaming export requires a Convex Pro plan. Learn more about our plans or upgra
 
 See the [Fivetran](https://fivetran.com/) or [Airbyte](https://airbyte.com/) docs to learn how to set up a streaming export. Contact us if you need help or have questions.
 
-### Streaming Import
+#### Streaming Import
 
 Adopting new technologies can be a slow, daunting process, especially when the technologies involve databases. Streaming import enables adopting Convex alongside your existing stack without having to write your own migration or data sync tooling. Some use cases include:
 
@@ -7338,15 +7307,15 @@ Adopting new technologies can be a slow, daunting process, especially when the t
 - Developing a reactive UI-layer on top of an existing dataset.
 - Migrating your data to Convex (if the CLI tool doesn't meet your needs).
 
-#### Make imported tables read-only
+##### Make imported tables read-only
 
 A common use case is to "mirror" a table in the source database to Convex to build something new using Convex. We recommend leaving imported tables as read-only in Convex because syncing the results back to the source database could result in dangerous write conflicts. While Convex doesn't yet have access controls that would ensure a table is read-only, you can make sure that there are no mutations or actions writing to imported tables in your code and avoid editing documents in imported tables in the dashboard.
 
-# Status and Guarantees
+## Status and Guarantees
 
 Please contact us with any specific requirements or if you want to build a project on Convex that is not yet satisfied by our guarantees.
 
-## Guarantees
+### Guarantees
 
 The official Convex Terms of Service, Privacy Policy and Customer Agreements are outlined in our official terms. We do not yet have contractual agreements beyond what is listed in our official terms and the discussions within this document don't constitute an amendment to these terms.
 
@@ -7356,37 +7325,37 @@ All user data in Convex is encrypted at rest. Database state is replicated durab
 
 We target an availability of 99.99% (4 9's) for Convex deployments although these may experience downtime for maintenance without notice. A physical outage may affect availability of a deployment but will not affect durability of the data stored in Convex.
 
-## Limits
+### Limits
 
 For information on limits, see [here](https://example.com).
 
-## Beta Features
+### Beta Features
 
 Features tagged with beta in these docs are still in development. They can be used in production but their APIs might change in the future, requiring additional effort when upgrading to a new version of the Convex NPM package and other Convex client libraries.
 
-## Future Features
+### Future Features
 
 Convex is still under very active development and here we list some of the missing functionality on our radar. We'd love to hear more about your requirements in the [Convex Discord Community](https://example.com).
 
-### Authorization
+#### Authorization
 
 Convex currently has an authentication framework which verifies user identities. In the future we plan to add an authorization framework which will allow developers to define what data a user can access.
 
 For now, you can implement manual authorization checks within your queries and mutations, but stay tuned for a more comprehensive, fool-proof solution in the future.
 
-### Telemetry
+#### Telemetry
 
 Currently, the dashboard provides only basic metrics. Serious sites at scale are going to need to integrate our logs and metrics into more fully fledged observability systems that categorize them and empower things like alerting.
 
 Convex will eventually have methods to publish deployment data in formats that can be ingested by third parties.
 
-### Analytics / OLAP
+#### Analytics / OLAP
 
 Convex is designed to primarily service all your app's realtime implementation (OLTP) needs. It is less suited to be a good solution for the kinds of complex queries and huge table scans that are necessary to address the requirements of analytics (OLAP) use cases.
 
 Convex exposes Fivetran and Airbyte connectors to export Convex data to external analytics systems.
 
-# Limits
+## Limits
 
 We'd love for you to have unlimited joy building on Convex but engineering practicalities dictate a few limits. This page outlines current limits in the Convex ecosystem.
 
@@ -7394,20 +7363,20 @@ Many of these limits will become more permissive over time. Please get in touch 
 
 Limits are applied per team unless stated otherwise.
 
-## Team
+### Team
 
 | Plan | Starter | Professional |
 | --- | --- | --- |
 | Developers | 1-2 | 1-20 |
 | Price | $25/member per month | - |
 
-## Projects
+### Projects
 
 | Plan | Starter | Professional |
 | --- | --- | --- |
 | Projects | 20 | 100 |
 
-## Database
+### Database
 
 | Plan | Starter | Professional | Notes |
 | --- | --- | --- | --- |
@@ -7421,7 +7390,7 @@ Limits are applied per team unless stated otherwise.
 **Restrictions:**
 - Table and index names must be valid identifiers and cannot start with an underscore.
 
-## Documents
+### Documents
 
 Applied per document and to any nested Object unless stated otherwise.
 
@@ -7437,7 +7406,7 @@ Applied per document and to any nested Object unless stated otherwise.
 - Field names must only contain non-control alphanumeric ASCII characters and underscores and must start with an alphabetic character or underscore.
 - Strings must be valid Unicode sequences with no unpaired surrogates.
 
-## Functions
+### Functions
 
 | Plan | Starter | Professional | Notes |
 | --- | --- | --- | --- |
@@ -7452,7 +7421,7 @@ Applied per document and to any nested Object unless stated otherwise.
 | Length of a console.log line | 4 KiB | 4 KiB | - |
 | Log streaming limits | 4096 logs, flushed every 10 seconds | 4096 logs, flushed every 10 seconds | How many logs can be buffered when streaming. |
 
-## Execution Time and Scheduling
+### Execution Time and Scheduling
 
 | Notes | Value |
 | --- | --- |
@@ -7463,7 +7432,7 @@ Applied per document and to any nested Object unless stated otherwise.
 | Concurrent IO operations per function | 1000 | The number of IO operations a single function can perform, e.g., a database operation, or a fetch request in an action. |
 | Outstanding scheduled functions | 1,000,000 | - |
 
-## Transactions
+### Transactions
 
 These limits apply to each query or mutation function.
 
@@ -7472,7 +7441,7 @@ These limits apply to each query or mutation function.
 | Data read | 8 MiB |
 | Data written | 8 MiB |
 
-## Environment Variables
+### Environment Variables
 
 Applied per-deployment.
 
@@ -7482,7 +7451,7 @@ Applied per-deployment.
 | Maximum name length | 40 characters |
 | Maximum value size | 8 KiB |
 
-## File Storage
+### File Storage
 
 | Plan | Starter | Professional |
 | --- | --- | --- |
@@ -7491,7 +7460,7 @@ Applied per-deployment.
 | Price | - | $0.03/month per additional GiB |
 | Price | - | $0.30 per additional GiB |
 
-## Full Text Search
+### Full Text Search
 
 *Full text search is currently a beta feature. If you have feedback or feature requests, let us know on Discord!*
 
@@ -7504,7 +7473,7 @@ Applied per-deployment.
 | Maximum term length | 32 B |
 | Maximum result set | 1024 |
 
-## Vector Search
+### Vector Search
 
 *Vector search is currently a beta feature. If you have feedback or feature requests, let us know on Discord!*
 
@@ -7523,11 +7492,11 @@ If any of these limits don't work for you, let us know!
 
 Please see our [plans and pricing page](https://www.convex.com/pricing) for resource limits. After these limits are hit on a free plan, new mutations that attempt to commit more insertions or updates may fail. Paid plans have no hard resource limits - they can scale to billions of documents and TBs of storage.
 
-# Environment Variables
+## Environment Variables
 
 Environment variables are key-value pairs that are useful for storing values you wouldn't want to put in code or in a table, such as an API key. You can set environment variables in Convex through the dashboard, and you can access them in functions using `process.env`.
 
-## Setting Environment Variables
+### Setting Environment Variables
 
 Under *Deployment Settings* in the Dashboard, you can see a list of environment variables in the current deployment.
 
@@ -7544,13 +7513,13 @@ npx convex env list
 npx convex env set API_KEY secret-api-key
 ```
 
-## Using Environment Variables in Dev and Prod Deployments
+### Using Environment Variables in Dev and Prod Deployments
 
 Since environment variables are set per-deployment, you can use different values for the same key in dev and prod deployments. This can be useful for when you have different external accounts you'd like to use depending on the environment. For example, you might have a dev and prod SendGrid account for sending emails, and your function expects an environment variable called `SENDGRID_API_KEY` that should work in both environments.
 
 If you expect an environment variable to be always present in a function, you must add it to all your deployments. In this example, you would add an environment variable with the name `SENDGRID_API_KEY` to your dev and prod deployments, with a different value for dev and prod.
 
-## Accessing Environment Variables
+### Accessing Environment Variables
 
 You can access environment variables in Convex functions using `process.env.KEY`. If the variable is set, it is a string; otherwise, it is `undefined`. Here is an example of accessing an environment variable with the key `GIPHY_KEY`:
 
@@ -7574,14 +7543,14 @@ export const myFunc = process.env.DEBUG ? mutation(...) : internalMutation(...);
 
 Similarly, environment variables used in cron definitions will only be reevaluated on deployment.
 
-## System Environment Variables
+### System Environment Variables
 
 The following environment variables are always available in Convex functions:
 
 - `CONVEX_CLOUD_URL` - Your deployment URL (e.g., `https://dusty-nightingale-847.convex.cloud`) for use with Convex clients.
 - `CONVEX_SITE_URL` - Your deployment site URL (e.g., `https://dusty-nightingale-847.convex.site`) for use with HTTP Actions.
 
-## Project Environment Variable Defaults
+### Project Environment Variable Defaults
 
 You can set up default environment variable values for a project for development and preview deployments in *Project Settings*.
 
@@ -7591,16 +7560,16 @@ These default values will be used when creating a new development or preview dep
 
 The *Deployment Settings* will indicate when a deployment has environment variables that do not match the project defaults.
 
-# Project Configuration
+## Project Configuration
 
-## Local development
+### Local development
 
 When you're developing locally you need two pieces of information:
 
 1. The name of your dev deployment. This is where your functions are pushed to and served from. It is stored in the `CONVEX_DEPLOYMENT` environment variable. `npx convex dev` writes it to the `.env.local` file.
 2. The URL of your dev deployment, for your client to connect to. The name of the variable and which file it can be read from varies between client frameworks. `npx convex dev` writes the URL to the `.env.local` or `.env` file.
 
-## Production deployment
+### Production deployment
 
 You should only be deploying to your production deployment once you have tested your changes on your local deployment. When you're ready, you can deploy either via a hosting/CI provider or from your local machine.
 
@@ -7608,13 +7577,13 @@ For a CI environment you can follow the hosting docs. `npx convex deploy` run by
 
 You can also deploy your backend from your local machine. `npx convex deploy` will ask for a confirmation and then deploy to the production deployment in the same project as your configured development `CONVEX_DEPLOYMENT`.
 
-## `convex.json`
+`convex.json`
 
 Additional project configuration can be specified in the `convex.json` file in the root of your project (in the same directory as your `package.json`).
 
 The file supports the following configuration options:
 
-### Changing the `convex/` folder name or location
+Changing the `convex/` folder name or location
 
 You can choose a different name or location for the `convex/` folder via the `functions` field. For example, Create React App doesn't allow importing from outside the `src/` directory, so if you're using Create React App you should have the following config:
 
@@ -7632,7 +7601,7 @@ You can specify which packages used by Node actions should be installed on the s
 
 The Convex code generation can be configured to generate a CommonJS-version of the `_generated/api.js` file via the `generateCommonJSApi` field. Read more.
 
-# Pausing a Deployment
+## Pausing a Deployment
 
 Pausing a deployment is a way to "turn off" a deployment without deleting any data. This can be useful if you have an action that is blowing through a third-party API quota and you just need a big red stop button.
 
@@ -7645,15 +7614,15 @@ When a deployment is paused:
 
 *This is important!* All new function calls will return an error when a deployment is paused, so if you are running an app in production you may want to consider alternatives like pushing code that disables a feature you are trying to "turn off". We recommend testing this feature in a dev deployment first before pausing a production deployment.
 
-## Pause Deployment Button
+### Pause Deployment Button
 
 A deployment can be resumed with this button on the same page:
 
-# Best Practices
+## Best Practices
 
 Here's a collection of our recommendations on how best to use Convex to build your application. If you want guidance specific to your app's needs or have discovered other ways of using Convex, message us on Discord!
 
-## Use TypeScript
+### Use TypeScript
 
 All Convex libraries have complete type annotations and using these types is a great way to learn the framework.
 
@@ -7661,7 +7630,7 @@ Even better, Convex supports code generation to create types that are specific t
 
 Code generation is run automatically by `npx convex dev`.
 
-## Functions
+### Functions
 
 1. Use argument validation in all public functions.
    Argument validation prevents malicious users from calling your functions with the wrong types of arguments. It's okay to skip argument validation for internal functions because they are not publicly accessible.
@@ -7713,11 +7682,11 @@ export async function getCurrentUser(ctx: QueryCtx): Promise<Doc<"users">> {
 }
 ```
 
-## Prefer queries and mutations over actions
+### Prefer queries and mutations over actions
 
 You should generally avoid using actions when the same goal can be achieved using queries or mutations. Since actions can have side effects, they can't be automatically retried nor their results cached. Actions should be used in more limited scenarios, such as calling third-party services.
 
-## Database
+### Database
 
 1. Use indexes or paginate all large database queries.
    Database indexes with range expressions allow you to write efficient database queries that only scan a small number of documents in the table. Pagination allows you to quickly display incremental lists of results. If your table could contain more than a few thousand documents, you should consider pagination or an index with a range expression to ensure that your queries stay fast.
@@ -7729,7 +7698,7 @@ You should generally avoid using actions when the same goal can be achieved usin
 
    You can read more about this at [Document IDs](https://docs.convex.dev/document-ids).
 
-## UI patterns
+### UI patterns
 
 1. Check for `undefined` to determine if a query is loading.
    The `useQuery` React hook will return `undefined` when it is first mounted, before the query has been loaded from Convex. Once a query is loaded, it will never be `undefined` again (even as the data reactively updates). `undefined` is not a valid return type for queries (you can see the types that Convex supports at [Data Types](https://docs.convex.dev/data-types)).
@@ -7744,13 +7713,11 @@ You should generally avoid using actions when the same goal can be achieved usin
 
    See [Error Handling](https://docs.convex.dev/error-handling) for more information.
 
-## TypeScript
+### TypeScript
 
 Convex provides end-to-end type support when Convex functions are written in TypeScript.
 
 You can gradually add TypeScript to a Convex project: the following steps provide progressively better type support. For the best support you'll want to complete them all.
-
-### Example: TypeScript and Schema
 
 #### Writing Convex Functions in TypeScript
 
