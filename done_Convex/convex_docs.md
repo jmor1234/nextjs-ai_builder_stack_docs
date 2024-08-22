@@ -4247,8 +4247,6 @@ Turns out Convex is automatically realtime! You don't have to do anything specia
 
 Clerk is an authentication platform providing login via passwords, social identity providers, one-time email or SMS access codes, and multi-factor authentication and basic user management.
 
-If you're using Next.js, see the [Next.js setup guide](https://docs.clerk.com/docs/nextjs-setup).
-
 ### Get started
 
 This guide assumes you already have a working React app with Convex. If not, follow the [Convex React Quickstart](https://docs.convex.dev/quickstart/react) first. Then:
