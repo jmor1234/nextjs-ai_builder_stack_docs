@@ -56,97 +56,13 @@ import { Send, User, Bot, Moon, Sun } from 'lucide-react';
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
+    // this enables the connection to convex
     api: 'https://acrobatic-curlew-931.convex.site/api/chat',
   });
-  const [isSending, setIsSending] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(scrollToBottom, [messages]);
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSending(true);
-    await handleSubmit(e);
-    setIsSending(false);
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
 
   return (
-    <div className={`flex justify-center items-center min-h-screen bg-secondary text-foreground p-6 font-sans transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
-      <div className="w-full max-w-2xl bg-background rounded-[var(--radius)] shadow-lg border border-border overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl">
-        <div className="flex justify-between items-center p-4 bg-primary/5 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">Chat</h2>
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors duration-200"
-            aria-label="Toggle dark mode"
-          >
-            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-secondary/20">
-          {messages.map((m, index) => (
-            <div
-              key={m.id}
-              className={`flex ${
-                m.role === 'user' ? 'justify-end' : 'justify-start'
-              } ${index > 0 && messages[index - 1].role !== m.role ? 'mt-8' : ''}`}
-            >
-              <div
-                className={`max-w-[85%] p-4 rounded-[var(--radius)] shadow-md transition-all duration-300 hover:shadow-lg ${
-                  m.role === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-card text-card-foreground'
-                }`}
-              >
-                <div className="flex items-center space-x-2 mb-2">
-                  {m.role === 'user' ? (
-                    <User className="h-5 w-5" />
-                  ) : (
-                    <Bot className="h-5 w-5" />
-                  )}
-                  <span className="font-semibold text-sm">
-                    {m.role === 'user' ? 'You' : 'AI'}
-                  </span>
-                  <span className="text-xs opacity-70">
-                    {new Date().toLocaleTimeString()}
-                  </span>
-                </div>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed">{m.content}</p>
-              </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-
-        <form onSubmit={onSubmit} className="p-4 bg-secondary/10 border-t border-border">
-          <div className="flex items-center space-x-2">
-            <input
-              className="flex-1 p-3 bg-background text-foreground border border-input rounded-[var(--radius)] focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring text-sm transition-all duration-200"
-              value={input}
-              placeholder="Type your message..."
-              onChange={handleInputChange}
-            />
-            <button
-              type="submit"
-              disabled={isSending}
-              className="p-3 bg-primary text-primary-foreground rounded-[var(--radius)] hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:bg-primary/50 transition-all duration-200 active:scale-95"
-              aria-label="Send message"
-            >
-              <Send className="h-5 w-5" />
-            </button>
-          </div>
-        </form>
-      </div>
+    <div>
+    // Frontend Chat UI Would Go Here
     </div>
   );
 }
