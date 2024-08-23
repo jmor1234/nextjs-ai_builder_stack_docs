@@ -6,14 +6,9 @@
 - **Key Point**: Almost every task or question will involve Next.js to some degree.
 
 ## Convex
-- **Primary Role**: Backend operations, database management, and file storage.
+- **Primary Role**: Backend operations, database management, vector storage and retrieval, and file storage.
 - **Authentication**: Integrates with Clerk for all authentication needs (client-side and server-side).
 - **Key Point**: For any authentication-related tasks, refer to the Clerk Authentication section in the Convex documentation.
-
-## Pinecone Vector Database
-- **Primary Role**: Main vector database for the application.
-- **Use Case**: Preferred choice for all vector embedding operations.
-- **Note**: While Convex offers vector storage capabilities, Pinecone is the current go-to solution for vector-related tasks.
 
 ## ShadCN/UI
 - **Primary Role**: Frontend UI/UX component library.
@@ -31,9 +26,8 @@
 1. Assess the primary nature of the task (frontend, backend, database, AI, authentication).
 2. Consider Next.js as the foundational layer for implementation.
 3. For specific functionalities:
-   - Backend/Database → Convex
+   - Backend/Database/Vector → Convex
    - Authentication → Convex (Clerk integration)
-   - Vector operations → Pinecone
    - UI components → ShadCN/UI (with flexibility)
    - AI functionalities → Vercel AI SDK
 4. Evaluate potential integrations between libraries for complex tasks.
