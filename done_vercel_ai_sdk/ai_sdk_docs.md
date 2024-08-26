@@ -3089,25 +3089,19 @@ The result object of `streamText` contains several promises that resolve when al
 - `result.finishReason`: The reason the model finished generating text.
 - `result.usage`: The usage of the model during text generation.
 
----
-title: Generating Structured Data
-description: Learn how to generate structured data with the Vercel AI SDK.
----
-
 ## Generating Structured Data
 
-While text generation can be useful, your usecase will likely call for generating structured data.
-For example, you might want to extract information from text, classify data, or generate synthetic data.
+While text generation can be useful, your use case will likely call for generating structured data. For example, you might want to extract information from text, classify data, or generate synthetic data.
 
-Many language models are capable of generating structured data, often defined as using "JSON modes" or "tools".
-However, you need to manually provide schemas and then validate the generated data as LLMs can produce incorrect or incomplete structured data.
+Many language models are capable of generating structured data, often defined as using "JSON modes" or "tools". However, you need to manually provide schemas and then validate the generated data as LLMs can produce incorrect or incomplete structured data.
 
-The Vercel AI SDK standardises structured object generation across model providers with the [`generateObject`](/docs/reference/ai-sdk-core/generate-object) function.
+The Vercel AI SDK standardises structured object generation across model providers with the `generateObject` and `streamObject` functions. You can use both functions with different output strategies, e.g. array, object, or no-schema, and with different generation modes, e.g. auto, tool, or json. You can use Zod schemas or JSON schemas to specify the shape of the data that you want, and the AI model will generate data that conforms to that structure.
 
-The `generateObject` function uses [Zod schemas](./schemas-and-zod) or [JSON schemas](/docs/reference/ai-sdk-core/json-schema) to specify the shape of the data that you want, and the AI model will generate data that conforms to that structure.
-The schema is also used to validate the generated data, ensuring type safety and correctness.
+### Generate Object
 
-```ts
+The `generateObject` generates structured data from a prompt. The schema is also used to validate the generated data, ensuring type safety and correctness.
+
+```javascript
 import { generateObject } from 'ai';
 import { z } from 'zod';
 
@@ -3124,24 +3118,90 @@ const { object } = await generateObject({
 });
 ```
 
-### Specifying Generation Mode
+### Stream Object
 
-While some models (like OpenAI) natively support object generation, others require alternative methods, like modified [tool calling](/docs/ai-sdk-core/tools-and-tool-calling). The `generateObject` function allows you to specify the method it will use to return structured data.
+Given the added complexity of returning structured data, model response time can be unacceptable for your interactive use case. With the `streamObject` function, you can stream the model's response as it is generated.
+
+```javascript
+import { streamObject } from 'ai';
+
+const { partialObjectStream } = await streamObject({
+  // ...
+});
+
+// use partialObjectStream as an async iterable
+for await (const partialObject of partialObjectStream) {
+  console.log(partialObject);
+}
+```
+
+You can use `streamObject` to stream generated UIs in combination with React Server Components (see Generative UI)) or the `useObject` hook.
+
+### Output Strategy
+
+You can use both functions with different output strategies, e.g. array, object, or no-schema.
+
+#### Output Strategy: Object
+
+The default output strategy is object, which returns the generated data as an object. You don't need to specify the output strategy if you want to use the default.
+
+#### Output Strategy: Array
+
+If you want to generate an array of objects, you can set the output strategy to array. When you use the array output strategy, the schema specifies the shape of an array element. With `streamObject`, you can also stream the generated array elements using `elementStream`.
+
+```javascript
+import { openai } from '@ai-sdk/openai';
+import { streamObject } from 'ai';
+import { z } from 'zod';
+
+const { elementStream } = await streamObject({
+  model: openai('gpt-4-turbo'),
+  output: 'array',
+  schema: z.object({
+    name: z.string(),
+    class: z
+      .string()
+      .describe('Character class, e.g. warrior, mage, or thief.'),
+    description: z.string(),
+  }),
+  prompt: 'Generate 3 hero descriptions for a fantasy role playing game.',
+});
+
+for await (const hero of elementStream) {
+  console.log(hero);
+}
+```
+
+#### Output Strategy: No Schema
+
+In some cases, you might not want to use a schema, for example when the data is a dynamic user request. You can use the output setting to set the output format to no-schema in those cases and omit the schema parameter.
+
+```javascript
+import { openai } from '@ai-sdk/openai';
+import { generateObject } from 'ai';
+
+const { object } = await generateObject({
+  model: openai('gpt-4-turbo'),
+  output: 'no-schema',
+  prompt: 'Generate a lasagna recipe.',
+});
+```
+
+### Generation Mode
+
+While some models (like OpenAI) natively support object generation, others require alternative methods, like modified tool calling. The `generateObject` function allows you to specify the method it will use to return structured data.
 
 - `auto`: The provider will choose the best mode for the model. This recommended mode is used by default.
 - `tool`: A tool with the JSON schema as parameters is provided and the provider is instructed to use it.
 - `json`: The response format is set to JSON when supported by the provider, e.g. via json modes or grammar-guided generation. If grammar-guided generation is not supported, the JSON schema and instructions to generate JSON that conforms to the schema are injected into the system prompt.
 
-<Note>
-  Please note that not every provider supports all generation modes. Some
-  providers do not support object generation at all.
-</Note>
+Please note that not every provider supports all generation modes. Some providers do not support object generation at all.
 
-### Specifying Schema Name and Description
+### Schema Name and Description
 
 You can optionally specify a name and description for the schema. These are used by some providers for additional LLM guidance, e.g. via tool or schema name.
 
-```ts highlight="6-7"
+```javascript
 import { generateObject } from 'ai';
 import { z } from 'zod';
 
@@ -3158,61 +3218,15 @@ const { object } = await generateObject({
 });
 ```
 
-### Streaming Objects
-
-Given the added complexity of returning structured data, model response time can be unacceptable for your interactive use case. With the [`streamObject`](/docs/reference/ai-sdk-core/stream-object) function, you can stream the model's response as it is generated.
-
-```ts
-import { streamObject } from 'ai';
-
-const { partialObjectStream } = await streamObject({
-  // ...
-});
-
-// use partialObjectStream as an async iterable
-for await (const partialObject of partialObjectStream) {
-  console.log(partialObject);
-}
-```
-
-You can use `streamObject` to stream generated UIs in combination with React Server Components (see [Generative UI](../ai-sdk-rsc))) or the [`useObject`](/docs/reference/ai-sdk-ui/use-object) hook.
-
 ### Schema Writing Tips
 
-The mapping from Zod schemas to LLM inputs (typically JSON schema) is not always straightforward, since the mapping is not one-to-one.
-Please checkout the following tips and the [Prompt Engineering with Tools](/docs/ai-sdk-core/tools-and-tool-calling#prompt-engineering-with-tools) guide.
-
-#### Generating Arrays
-
-Most models require an object as the top-level schema. If you want to generate an array, you can wrap it in an object with a single descriptive key and use destructuring to access the array.
-
-```ts highlight="2,5-6"
-const {
-  object: { users },
-} = await generateObject({
-  model: yourModel,
-  schema: z.object({
-    users: z.array(
-      z.object({
-        login: z.string(),
-        fullName: z.string(),
-        age: z.number(),
-      }),
-    ),
-  }),
-  prompt: 'Generate a list of fake user profiles for testing.',
-});
-
-console.log('users', users);
-```
+The mapping from Zod schemas to LLM inputs (typically JSON schema) is not always straightforward, since the mapping is not one-to-one. Please checkout the following tips and the Prompt Engineering with Tools guide.
 
 #### Dates
 
-Zod expects JavaScript Date objects, but models return dates as strings.
-You can specify and validate the date format using `z.string().datetime()` or `z.string().date()`,
-and then use a Zod transformer to convert the string to a Date object.
+Zod expects JavaScript Date objects, but models return dates as strings. You can specify and validate the date format using `z.string().datetime()` or `z.string().date()`, and then use a Zod transformer to convert the string to a Date object.
 
-```ts highlight="7-10"
+```javascript
 const result = await generateObject({
   model: openai('gpt-4-turbo'),
   schema: z.object({
@@ -3232,13 +3246,11 @@ const result = await generateObject({
 
 ### Error Handling
 
-When you use `generateObject`, errors are thrown when the model fails to generate proper JSON (`JSONParseError`)
-or when the generated JSON does not match the schema (`TypeValidationError`).
-Both error types contain additional information, e.g. the generated text or the invalid value.
+When you use `generateObject`, errors are thrown when the model fails to generate proper JSON (`JSONParseError`) or when the generated JSON does not match the schema (`TypeValidationError`). Both error types contain additional information, e.g. the generated text or the invalid value.
 
 You can use this to e.g. design a function that safely process the result object and also returns values in error cases:
 
-```ts
+```javascript
 import { openai } from '@ai-sdk/openai';
 import { JSONParseError, TypeValidationError, generateObject } from 'ai';
 import { z } from 'zod';
@@ -3280,11 +3292,6 @@ async function generateRecipe(
   }
 }
 ```
-
----
-title: Tool Calling
-description: Learn about tool calling with Vercel AI SDK Core.
----
 
 ## Tool Calling
 
@@ -3618,11 +3625,6 @@ const result = await generateText({
   request made by the provider.
 </Note>
 
----
-title: Embeddings
-description: Learn how to embed values with the Vercel AI SDK.
----
-
 ## Embeddings
 
 Embeddings are a way to represent words, phrases, or images as vectors in a high-dimensional space.
@@ -3706,35 +3708,91 @@ const { embedding, usage } = await embed({
 
 console.log(usage); // { tokens: 10 }
 ```
-
----
-title: Provider Management
-description: Learn how to work with multiple providers
----
-
 ## Provider Management
 
-<Note>Provider management is an experimental feature.</Note>
+Provider management is an experimental feature.
 
-When you work with multiple providers and models, it is often desirable to manage them in a central place
-and access the models through simple string ids.
+When you work with multiple providers and models, it is often desirable to manage them in a central place and access the models through simple string ids.
 
-The Vercel AI SDK provides a [`ProviderRegistry`](/docs/reference/ai-sdk-core/provider-registry) for this purpose.
-You can register multiple providers. The provider id will become the prefix of the model id:
-`providerId:modelId`.
+The Vercel AI SDK offers custom providers and a provider registry for this purpose. With custom providers, you can pre-configure model settings, provide model name aliases, and limit the available models. The provider registry lets you mix multiple providers and access them through simple string ids.
+
+### Custom Providers
+
+You can create a custom provider using `experimental_customProvider`.
+
+#### Example: custom model settings
+
+You might want to override the default model settings for a provider or provide model name aliases with pre-configured settings.
+
+```javascript
+import { openai as originalOpenAI } from '@ai-sdk/openai';
+import { experimental_customProvider as customProvider } from 'ai';
+
+// custom provider with different model settings:
+export const openai = customProvider({
+  languageModels: {
+    // replacement model with custom settings:
+    'gpt-4o': originalOpenAI('gpt-4o', { structuredOutputs: true }),
+    // alias model with custom settings:
+    'gpt-4o-mini-structured': originalOpenAI('gpt-4o-mini', {
+      structuredOutputs: true,
+    }),
+  },
+  fallbackProvider: originalOpenAI,
+});
+```
+
+#### Example: model name alias
+
+You can also provide model name aliases, so you can update the model version in one place in the future:
+
+```javascript
+import { anthropic as originalAnthropic } from '@ai-sdk/anthropic';
+import { experimental_customProvider as customProvider } from 'ai';
+
+// custom provider with alias names:
+export const anthropic = customProvider({
+  languageModels: {
+    opus: originalAnthropic('claude-3-opus-20240229'),
+    sonnet: originalAnthropic('claude-3-5-sonnet-20240620'),
+    haiku: originalAnthropic('claude-3-haiku-20240307'),
+  },
+  fallbackProvider: originalAnthropic,
+});
+```
+
+#### Example: limit available models
+
+You can limit the available models in the system, even if you have multiple providers.
+
+```javascript
+import { anthropic } from '@ai-sdk/anthropic';
+import { openai } from '@ai-sdk/openai';
+import { experimental_customProvider as customProvider } from 'ai';
+
+export const myProvider = customProvider({
+  languageModels: {
+    'text-medium': anthropic('claude-3-5-sonnet-20240620'),
+    'text-small': openai('gpt-4o-mini'),
+    'structure-medium': openai('gpt-4o', { structuredOutputs: true }),
+    'structure-fast': openai('gpt-4o-mini', { structuredOutputs: true }),
+  },
+  embeddingModels: {
+    emdedding: openai.textEmbeddingModel('text-embedding-3-small'),
+  },
+  // no fallback provider
+});
+```
 
 ### Provider Registry
 
-#### Setup
+You can create a provider registry with multiple providers and models using `experimental_createProviderRegistry`.
 
-You can create a registry with multiple providers and models using `experimental_createProviderRegistry`.
+#### Example: Setup
 
-<Note>
-  It is common to keep the registry setup in a separate file and import it where
-  needed.
-</Note>
+registry.ts
 
-```ts filename={"registry.ts"}
+```javascript
 import { anthropic } from '@ai-sdk/anthropic';
 import { createOpenAI } from '@ai-sdk/openai';
 import { experimental_createProviderRegistry as createProviderRegistry } from 'ai';
@@ -3750,12 +3808,11 @@ export const registry = createProviderRegistry({
 });
 ```
 
-#### Language models
+#### Example: Use language models
 
-You can access language models by using the `languageModel` method on the registry.
-The provider id will become the prefix of the model id: `providerId:modelId`.
+You can access language models by using the `languageModel` method on the registry. The provider id will become the prefix of the model id: `providerId:modelId`.
 
-```ts highlight={"5"}
+```javascript
 import { generateText } from 'ai';
 import { registry } from './registry';
 
@@ -3765,12 +3822,11 @@ const { text } = await generateText({
 });
 ```
 
-#### Text embedding models
+#### Example: Use text embedding models
 
-You can access text embedding models by using the `textEmbeddingModel` method on the registry.
-The provider id will become the prefix of the model id: `providerId:modelId`.
+You can access text embedding models by using the `textEmbeddingModel` method on the registry. The provider id will become the prefix of the model id: `providerId:modelId`.
 
-```ts highlight={"5"}
+```javascript
 import { embed } from 'ai';
 import { registry } from './registry';
 
@@ -3779,42 +3835,6 @@ const { embedding } = await embed({
   value: 'sunny day at the beach',
 });
 ```
-
-### Model Maps
-
-An alternative approach to the provider registry is to just create an object that maps ids
-to models. This has the following advantages:
-
-- You can restrict the models that you want to use (e.g. when you let your users choose models)
-- You can chose custom ids for the models (e.g. semantic ids)
-- You can predefine custom settings for the models
-
-However, it is more verbose and you need to specify each model individually.
-
-#### Examples
-
-```ts
-import { anthropic } from '@ai-sdk/anthropic';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
-
-const myModels = {
-  'structuring-model': openai('gpt-4o-2024-08-06', {
-    structuredOutputs: true,
-  }),
-  'smart-model': anthropic('claude-3-5-sonnet-20240620'),
-} as const;
-
-const result = await streamText({
-  model: myModels['structuring-model'],
-  prompt: 'Invent a new holiday and describe its traditions.',
-});
-```
-
----
-title: Error Handling
-description: Learn how to handle errors in the AI SDK Core
----
 
 ## Error Handling
 
