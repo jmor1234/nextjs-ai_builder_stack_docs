@@ -1,6 +1,8 @@
 # Integrating the Vercel AI SDK with Convex
 
-## `components/ConvexClientProvider.tsx`
+## Example of Initial Integration Set up in Next.js
+
+### `components/ConvexClientProvider.tsx`
 
 ```typescript
 "use client";
@@ -15,7 +17,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
 }
 ```
 
-## `app/layout.tsx`
+### `app/layout.tsx`
 
 ```typescript
 import "./globals.css";
@@ -45,7 +47,7 @@ export default function RootLayout({
 }
 ```
 
-## `app/page.tsx`
+### `app/page.tsx`
 
 ```typescript
 'use client';
@@ -68,7 +70,7 @@ export default function Chat() {
 }
 ```
 
-## `convex/http.ts`
+### `convex/http.ts`
 
 ```typescript
 import { Hono } from "hono";
