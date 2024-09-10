@@ -3223,6 +3223,26 @@ for await (const hero of elementStream) {
 }
 ```
 
+#### Output Strategy: Enum
+
+If you want to generate a specific enum value, e.g. for classification tasks, you can set the output strategy to enum and provide a list of possible values in the enum parameter.
+
+Enum output is only available with generateObject.
+
+```javascript
+import { generateObject } from 'ai';
+
+const { object } = await generateObject({
+  model: yourModel,
+  output: 'enum',
+  enum: ['action', 'comedy', 'drama', 'horror', 'sci-fi'],
+  prompt:
+    'Classify the genre of this movie plot: ' +
+    '"A group of astronauts travel through a wormhole in search of a ' +
+    'new habitable planet for humanity."',
+});
+```
+
 #### Output Strategy: No Schema
 
 In some cases, you might not want to use a schema, for example when the data is a dynamic user request. You can use the output setting to set the output format to no-schema in those cases and omit the schema parameter.
